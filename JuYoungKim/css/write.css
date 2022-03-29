@@ -1,0 +1,84 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'IBM Plex Sans KR', sans-serif;
+}
+.nav{
+    height: 70px;
+    /* border: 1px solid #fff; */
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.7); */
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #060607;
+}
+.nav-logo a{
+    text-decoration: none;
+    padding: 8px 12px;
+    color: #D7E5E7;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+.nav-links a{
+    text-decoration: none;
+    padding: 8px 12px;
+    color: #D7E5E7;
+    margin-right: 10px;
+}
+
+
+.footer-section{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #060607;
+    color: #D7E5E7;
+}
+
+.ck-editor__editable_inline {
+    min-height: 500px;
+    max-height: 500px;
+}
+
+.ckeditor-div{
+    margin: 0 auto;
+    margin-top: 50px;
+    /* border: 1px solid black; */
+    width: 80%;
+    height: 500px;
+}
+
+.ckeditor-div h1{
+    text-align: left;
+    padding: 8px;
+    font-size: 2.2em;
+    font-weight:bold;
+    color: #060607;
+}
+
+.write-form-btn{
+    /* border: 1px solid black; */
+    text-align: right;
+    margin-top: 10px;
+}
+
+.write-form-btn button{
+    margin: 0;
+    background-color: #060607;
+    color: #D7E5E7;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.write-form-btn button a{
+    display: inline-block;
+    padding: 8px 27px;
+    color: #D7E5E7;
+    font-weight: bold;
+    text-decoration: none;
+}
