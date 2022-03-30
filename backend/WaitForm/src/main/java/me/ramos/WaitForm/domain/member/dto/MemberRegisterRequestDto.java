@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.ramos.WaitForm.domain.member.entity.Member;
-import me.ramos.WaitForm.domain.member.entity.MemberRole;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import me.ramos.WaitForm.domain.member.entity.Authority;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +31,7 @@ public class MemberRegisterRequestDto {
                 .email(getEmail())
                 .password(getPassword()) // AuthService에서 BCryptPasswordEncoder로 인코딩 후 save 해야 함.
                 .nickname(getNickname())
+                .authority(Authority.ROLE_USER)
                 .build();
     }
 }

@@ -45,14 +45,14 @@ public class AuthService {
         // Login Email/Password를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginRequest.toAuthentication();
         // 실제로 검증이 이루어지는 부분(비밀번호 체크)
-        Authentication authenticate = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authenticationToken);
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
-                .key(authenticate.getName())
+                .key(authentication.getName())
                 .value(tokenDto.getRefreshToken())
                 .build();
 

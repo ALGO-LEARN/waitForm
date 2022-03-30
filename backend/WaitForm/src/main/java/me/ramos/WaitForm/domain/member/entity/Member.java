@@ -30,14 +30,14 @@ public class Member {
 
     @Column(name = "member_role")
     @Enumerated(EnumType.STRING)
-    private MemberRole authority;
+    private Authority authority;
 
     @Builder
-    public Member(String email, String password, String nickname) {
+    public Member(String email, String password, String nickname, Authority authority) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.authority = MemberRole.ROLE_USER;
+        this.authority = authority;
     }
 
     public void setEncryptedPassword(String encryptedPassword) {
