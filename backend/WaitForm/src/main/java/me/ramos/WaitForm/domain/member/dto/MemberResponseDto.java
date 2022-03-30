@@ -11,6 +11,11 @@ import me.ramos.WaitForm.domain.member.entity.Member;
 public class MemberResponseDto {
     private String email;
 
+    /**
+     * 정적 팩토리 메서드 패턴
+     * @param member
+     * @return
+     */
     public static MemberResponseDto of(Member member) {
         return new MemberResponseDto(member.getEmail());
     }
