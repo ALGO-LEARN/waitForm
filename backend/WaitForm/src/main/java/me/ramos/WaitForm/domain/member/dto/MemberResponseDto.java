@@ -10,6 +10,7 @@ import me.ramos.WaitForm.domain.member.entity.Member;
 @NoArgsConstructor
 public class MemberResponseDto {
     private String email;
+    private String nickname;
 
     /**
      * 정적 팩토리 메서드 패턴
@@ -17,6 +18,6 @@ public class MemberResponseDto {
      * @return
      */
     public static MemberResponseDto of(Member member) {
-        return new MemberResponseDto(member.getEmail());
+        return new MemberResponseDto(member.getEmail(), member.getNickname());
     }
 }
