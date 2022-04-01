@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaitForm : write</title>
+    <link rel="stylesheet" href="/css/write.css">
+
+     <!-- font-->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- CKEditor-->
+    <script src="https://cdn.ckeditor.com/ckeditor5/33.0.0/classic/ckeditor.js"></script>
+
+</head>
+<body>
+    <div class="header">
+        <div class="nav">
+            <div class="nav-logo">
+                <a href="">WAITFORM</a>
+            </div>
+            <div class="nav-links">
+                <a href="">LOGIN</a>
+                <a href="">SIGN UP</a>
+            </div>
+        </div>
+    </div>
+
+<section class="write-section">
+    
+    <div class="ckeditor-div">
+        <h1>양식 작성</h1>
+        <form action="">
+            <textarea name="contents" id="ckeditor"></textarea>
+            <div class="write-form-btn">
+                <button><a href="#" target="_blank">취소</a></button>
+                <button><a href="#" target="_blank">제출</a></button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="footer-section">
+    <footer>
+        <div class="nav-logo">
+            <i class="fa-solid fa-address-card"></i>
+            <a href="">외폼</a>
+        </div>
+        <p>Copyright © 2022 tcpschool.co.,Ltd. All rights reserved.</p>
+    </footer>
+</section>
+
+<script>
+    ClassicEditor
+            .create(document.querySelector('#ckeditor'))
+            .catch(error=>{
+                console.error(error);
+            });
+    
+</script>
+</body>
+</html>
