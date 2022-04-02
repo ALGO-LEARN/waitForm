@@ -1,0 +1,32 @@
+spring:
+
+  # Swagger 3.x 설정
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+    generate-ddl: true
+
+# HS512 알고리즘을 사용해야 하므로 512bits(64bytes) 이상의 secret key를 사용해야 한다.
+# echo 'ramos-is-tech-leader-spring-boot-security-jwt-waitform-capstone-design-2022' | base64
+jwt:
+  secret: cmFtb3MtaXMtdGVjaC1sZWFkZXItc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXdhaXRmb3JtLWNhcHN0b25lLWRlc2lnbi0yMDIyCg==
