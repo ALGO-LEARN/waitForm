@@ -12,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #060607;
+    /* background-color: #060607; */
 }
 .nav-logo a{
     text-decoration: none;
@@ -26,17 +26,17 @@
     text-decoration: none;
     padding: 8px 12px;
     color: #D7E5E7;
+    font-weight: 700;
     margin-right: 10px;
 }
 
 
 .footer-section{
     width: 100%;
-    position: absolute;
-    bottom: 99999999999;
+    position: fixed;
+    bottom: 0;
     text-align: center;
     background-color: #060607;
-    margin-top: 100px;
     color: #D7E5E7;
 }
 
@@ -47,7 +47,7 @@
     width: 80%;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    /* border: 1px solid black; */
+    border: 1px solid black;
 }
 
 .result-creator{
