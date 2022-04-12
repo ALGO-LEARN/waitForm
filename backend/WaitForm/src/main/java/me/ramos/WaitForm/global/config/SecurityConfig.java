@@ -77,6 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable();
 
         http
+                .cors().configurationSource(configurationSource())
+                .and()
                 .csrf().disable()
 
                 // exceptionHandling customizing

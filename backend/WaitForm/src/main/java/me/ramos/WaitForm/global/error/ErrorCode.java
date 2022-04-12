@@ -16,11 +16,15 @@ public enum ErrorCode {
 
     // Member
     MEMBER_NOT_EXIST(404, "M001", "member not exist"),
-    USER_EMAIL_ALREADY_EXISTS(400, "M002", "user email already exists"),
+    MEMBER_EMAIL_ALREADY_EXISTS(400, "M002", "user email already exists"),
     NO_AUTHORITY(403, "M003", "no authority"),
     NEED_LOGIN(401, "M004", "need login"),
     AUTHENTICATION_NOT_FOUND(401, "M005", "Security Context에 인증 정보가 없습니다."),
     MEMBER_ALREADY_LOGOUT(400, "M006", "member already logout"),
+    MEMBER_NICKNAME_ALREADY_EXISTS(400, "M007", "member nickname already exists"),
+
+    // Board
+    BOARD_NOT_FOUND(404, "B001", "board not exist"),
 
     // Auth
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid");
