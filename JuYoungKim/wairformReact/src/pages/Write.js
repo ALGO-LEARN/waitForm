@@ -1,26 +1,21 @@
 import React from "react";
 import "../css/write.css"
+import AlarmModal from "./AlarmModal";
+import Footer from "../components/Footer";
+import NavBlack from "../components/NavBlack";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {Link} from 'react-router-dom';
-const Wirte = () =>{
+import isLogin from '../control/isLogin';
+
+const Wirte = (props) =>{
+    const isloged = isLogin();
     return (
         <>
-            <div>
-                <div className="nav-background">
-                    <div className="nav-logo">
-                        <Link to="/">WAITFORM</Link>
-                    </div>
-                    <div className="nav-links">
-                        <Link to="/login">LOGIN</Link>
-                        <Link to="/signup">SIGN UP</Link>
-                    </div>
-                </div>
-            </div>
+            <NavBlack isloged={isloged} />
 
             <section className="write-section">
     
-                <div clasNames="ckeditor-div">
+                <div className="ckeditor-div">
                     <h1>양식 작성</h1>
                     <form action="">
                             <CKEditor
@@ -48,16 +43,9 @@ const Wirte = () =>{
                     </form>
                 </div>
             </section>
-
-            <section className="footer-section">
-                <footer>
-                    <div className="nav-logo">
-                        <i class="fa-solid fa-address-card"></i>
-                        <Link to="/">외폼</Link>
-                    </div>
-                    <p>Copyright © 2022 tcpschool.co.,Ltd. All rights reserved.</p>
-                </footer>
-            </section>        
+            
+            <AlarmModal></AlarmModal>
+            <Footer></Footer>
         </>
     );
 }

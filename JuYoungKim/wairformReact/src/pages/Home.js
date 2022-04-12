@@ -1,30 +1,20 @@
 import '../css/home.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AlarmModal from '../pages/AlarmModal';
+import HomeNav from '../components/HomeNav';
+import isLogin from '../control/isLogin';
 
-const Home=()=>{
-
-
-    function show() {
-        document.querySelector(".modal-background").className = "modal-background modal-show";
-        
-      }
-
+const Home=(props)=>{
+    const [isloged,setIsloged] = useState(false);
+    useEffect( ()=>{
+        setIsloged(isLogin());
+        console.log("isloged in Home = "+isloged);
+    },[isloged]);
     return (
-        <div>
-            <div className="header">
-                    <div className="nav">
-                        <div className="nav-logo">
-                            <Link to = "/">WAITFORM</Link>
-                        </div>
-                        <div className="nav-links">
-                            <Link to = "/">ABOUT</Link>
-                            <Link to = "" id="alarm-show" onClick={show}>ALARM</Link>
-                            <Link to ="/login">LOGIN</Link>
-                            <Link to = "/signup">SIGN UP</Link>
-                        </div>
-                    </div>
+            <div>
+                <div className="header">
+                    <HomeNav isloged = {isloged}></HomeNav>
                     <div className="intro">
                         <div className="intro-contents">
                             <h1>당신이 찾고있는</h1>
@@ -62,7 +52,7 @@ const Home=()=>{
 
 
                 <AlarmModal></AlarmModal>
-    </div>
+        </div>
     );
 }
 

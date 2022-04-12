@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom'
 import '../css/alarmmodal.css'
 
-const AlarmModal = ()=>{
+const AlarmModal = (props)=>{
     
     function close() {
         document.querySelector(".modal-background").className = "modal-background";
@@ -66,11 +66,11 @@ const AlarmModal = ()=>{
                             </table>
                         </div>
                         <div className="modal-contents-footer">
-                            <Link to = "">1</Link>
-                            <Link to = "">2</Link>
-                            <Link to = "">3</Link>
-                            <Link to = "">4</Link>
-                            <Link to = "">5</Link>
+                            <Link to = "#">1</Link>
+                            <Link to = "#">2</Link>
+                            <Link to = "#">3</Link>
+                            <Link to = "#">4</Link>
+                            <Link to = "#">5</Link>
                         </div>
                     </div>
                 </div>

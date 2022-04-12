@@ -1,9 +1,5 @@
-*{
-    margin: 0;
-    padding: 0;
-    font-family: 'IBM Plex Sans KR', sans-serif;
-    user-select: none;
-}
+
+
 /* 외폼부터부터 버튼까지*/
 .log-in-form{
     border: 2px solid #060607;
@@ -27,7 +23,7 @@
 }
 
 /*input label of id, pwd*/
-label{
+.input-form label{
     /* border: 1px solid black; */
     display: block;
     text-align: left;
@@ -35,7 +31,7 @@ label{
     color: #060607;
 }
 /*input */
-input{
+.input-form input{
     width: 280px;
     padding: 5px 20px;
     margin: 10px;
@@ -56,6 +52,7 @@ input{
 
 /*find id pwd div*/
 .find-id-pwd a{
+    margin-right: 10px;
     display: inline-block;
     text-decoration: none;
     text-align: right;
@@ -70,26 +67,35 @@ input{
     margin: 11px;
 }
 
+.btn-div a{
+    /* border: 1px solid black; */
+    text-decoration: none;
+    color: #D7E5E7;
+}
+
 
 
 
 /* footer 영역 */
-.footer-section{
+/* .footer-section{
     position: fixed;
     bottom: 0;
     width: 100%;
     text-align: center;
     background-color: #060607;
     color: #D7E5E7;
-}
+} */
 
-.nav-logo{
+
+
+/* .nav-logo{
     padding: 0;
     margin: 0;
-}
-.nav-logo a{
+} */
+
+/* .nav-logo a{
     font-size: 1.1em;
     color: #D7E5E7;
     font-weight: bold;
     text-decoration: none;
-}
+} */

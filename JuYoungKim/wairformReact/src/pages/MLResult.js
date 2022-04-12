@@ -1,21 +1,16 @@
 import React from "react";
-import {Link} from 'react-router-dom'
+import AlarmModal from '../pages/AlarmModal';
 import '../css/result.css';
-const MLResult = () =>{
+import Footer from "../components/Footer";
+import NavBlack from "../components/NavBlack";
+import isLogin from "../control/isLogin";
+
+const MLResult = (props) =>{
+
+    const isloged = isLogin();
     return(
         <>
-                    <div>
-                        <div class="nav-background">
-                            <div class="nav-logo">
-                                <Link to="/">WAITFORM</Link>
-                            </div>
-                            <div class="nav-links">
-                                <Link to="/login">LOGIN</Link>
-                                <Link to="/signup">SIGN UP</Link>
-                            </div>
-                        </div>
-                    </div>
-
+                <NavBlack isloged={isloged}/>
                 <section class="result">
                     <div class="result-creator">
                         <h1>이 름</h1>
@@ -67,16 +62,9 @@ const MLResult = () =>{
                     </div>
                     
                 </section>
-
-                <section class="footer-section">
-                    <div>
-                        <div class="nav-logo">
-                            <i class="fa-solid fa-address-card"></i>
-                            <Link to="/">외폼</Link>
-                        </div>
-                        <p>Copyright © 2022 tcpschool.co.,Ltd. All rights reserved.</p>
-                    </div>
-                </section>
+                <AlarmModal></AlarmModal>
+                <Footer></Footer>
+                
         </>
     );
 }
