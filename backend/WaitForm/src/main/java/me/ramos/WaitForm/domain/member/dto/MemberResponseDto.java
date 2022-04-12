@@ -9,6 +9,7 @@ import me.ramos.WaitForm.domain.member.entity.Member;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberResponseDto {
+    private Long id;
     private String email;
     private String nickname;
 
@@ -18,6 +19,6 @@ public class MemberResponseDto {
      * @return
      */
     public static MemberResponseDto of(Member member) {
-        return new MemberResponseDto(member.getEmail(), member.getNickname());
+        return new MemberResponseDto(member.getId(), member.getEmail(), member.getNickname());
     }
 }

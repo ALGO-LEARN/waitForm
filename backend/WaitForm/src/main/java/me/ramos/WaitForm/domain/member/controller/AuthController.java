@@ -52,7 +52,10 @@ public class AuthController {
     }
 
     @Operation(summary = "토큰 재발급", description = "Access Token(30분), Refresh Token(7일)의 유효기간이 지났을 때, 재발급 합니다. HTTP Header Authentication에 'Bearer {accessToken}'이 있어야 하고," +
-            "요청 parameter로 accessToken, refreshToken을 넣어줘야 함.")
+            "요청 parameter로 accessToken, refreshToken을 넣어줘야 함.", responses = {
+            @ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
+            @ApiResponse(responseCode = "400", description = "권한이 없거나 유효하지 않은 토큰")
+    })
     @PostMapping("/reissue")
     public ResponseEntity<ResultResponse> reissue(@Valid @RequestBody TokenRequestDto tokenRequestDto) {
         TokenDto tokenDto = authService.reissue(tokenRequestDto);
@@ -60,7 +63,12 @@ public class AuthController {
         return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
     }
 
-    @Operation(summary = "로그아웃", description = "로그인 상태에서 로그아웃을 합니다. HTTP Header Authentication에 'Bearer {accessToken}'이 있어야 하고, 요청 parameter로 refreshToken을 넣어줘야 함.")
+    @Operation(summary = "로그아웃", description = "로그인 상태에서 로그아웃을 합니다. HTTP Header Authentication에 'Bearer {accessToken}'이 있어야 하고, 요청 parameter로 refreshToken을 넣어줘야 함.",
+        responses = {
+                @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+                @ApiResponse(responseCode = "400", description = "권한이 없거나 유효하지 않은 토큰")
+        }
+    )
     @PostMapping("/logout")
     public ResponseEntity<ResultResponse> logout(@Valid @RequestBody MemberLogoutRequestDto memberLogoutRequestDto) {
         String refreshToken = memberLogoutRequestDto.getRefreshToken();
