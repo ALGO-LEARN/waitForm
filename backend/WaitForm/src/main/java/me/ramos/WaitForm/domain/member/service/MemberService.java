@@ -10,15 +10,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    @Transactional(readOnly = true)
     public MemberResponseDto getMyInfo() {
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
 
         return memberRepository.findById(currentMemberId)
+                .map(MemberResponseDto::of)
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
+    public MemberResponseDto findByMemberNickname(String nickname) {
+        return memberRepository.findByNickname(nickname)
                 .map(MemberResponseDto::of)
                 .orElseThrow(MemberNotFoundException::new);
     }

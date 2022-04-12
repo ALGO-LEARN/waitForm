@@ -7,7 +7,8 @@ import me.ramos.WaitForm.domain.member.dto.MemberResponseDto;
 import me.ramos.WaitForm.domain.member.entity.Member;
 import me.ramos.WaitForm.domain.member.entity.RefreshToken;
 import me.ramos.WaitForm.domain.member.exception.MemberAlreadyLogoutException;
-import me.ramos.WaitForm.domain.member.exception.UserEmailAlreadyExistException;
+import me.ramos.WaitForm.domain.member.exception.MemberEmailAlreadyExistException;
+import me.ramos.WaitForm.domain.member.exception.MemberNicknameAlreadyExistException;
 import me.ramos.WaitForm.domain.member.repository.MemberRepository;
 import me.ramos.WaitForm.domain.member.repository.RefreshTokenRepository;
 import me.ramos.WaitForm.global.config.jwt.TokenProvider;
@@ -34,7 +35,11 @@ public class AuthService {
     @Transactional
     public MemberResponseDto signup(MemberRegisterRequestDto memberRegisterRequestDto) {
         if (memberRepository.existsByEmail(memberRegisterRequestDto.getEmail())) {
-            throw new UserEmailAlreadyExistException();
+            throw new MemberEmailAlreadyExistException();
+        }
+
+        if (memberRepository.existsByNickname(memberRegisterRequestDto.getNickname())) {
+            throw new MemberNicknameAlreadyExistException();
         }
 
         Member member = memberRegisterRequestDto.toEntity();

@@ -39,5 +39,6 @@ public class Board {
         this.member = member;
         this.title = title;
         this.content = content;
+        this.createdDate = LocalDateTime.now();
     }
 }
