@@ -1,0 +1,32 @@
+.nav{
+    height: 70px;
+    /* border: 1px solid #fff; */
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.7); */
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo{
+    padding: 0;
+    margin: 0;
+}
+
+.nav-logo a{
+    text-decoration: none;
+    padding: 8px 12px;
+    color: #D7E5E7;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.nav-links a{
+    text-decoration: none;
+    padding: 8px 12px;
+    color: #D7E5E7;
+    font-weight: 700;
+    margin-right: 10px;
+}
