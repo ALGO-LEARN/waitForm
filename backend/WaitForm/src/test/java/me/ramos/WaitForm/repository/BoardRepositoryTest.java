@@ -8,7 +8,6 @@ import me.ramos.WaitForm.domain.board.repository.BoardRepository;
 import me.ramos.WaitForm.domain.member.entity.Authority;
 import me.ramos.WaitForm.domain.member.entity.Member;
 import me.ramos.WaitForm.domain.member.repository.MemberRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +43,7 @@ public class BoardRepositoryTest {
 
         Board board = Board.builder()
                 .title("Board test")
-                .content("생성합니다. 2022년 4월 7일 오늘의 날씨는 매우 맑음... 벛꽃이 만연한 봄날.")
+                .content("test content1")
                 .member(member)
                 .build();
 
@@ -61,32 +60,38 @@ public class BoardRepositoryTest {
 
     @Test
     @DisplayName("Board 생성 테스트")
-    public void test() throws Exception {
+    public void boardUploadTest() throws Exception {
         //when
         Board test = boardRepository.findById(1L).orElseThrow();
 
         //then
         assertThat("Board test").isEqualTo(test.getTitle());
-        assertThat("생성합니다. 2022년 4월 7일 오늘의 날씨는 매우 맑음... 벛꽃이 만연한 봄날.").isEqualTo(test.getContent());
+        assertThat("test content1").isEqualTo(test.getContent());
         assertThat("test@test.com").isEqualTo(test.getMember().getEmail());
+
     }
 
     @Test
-    @DisplayName("QueryDSL SELECT test")
-    public void querydslTest() {
+    @DisplayName("Member Id로 회원이 쓴 글 목록 조회 with QueryDSL")
+    public void findAllByMemberIdTest_QueryDSL() {
+        //when
         List<BoardResponseDto> list = boardRepository.findAllByMemberId(1L);
 
-//        for (BoardResponseDto dto : list) {
-//            System.out.println(dto.getContent());
-//            System.out.println(dto.getCreatedDate());
-//        }
-
-//        assertThat("test").isEqualTo(list.get(1).getWriterNickname());
+        //then
+        assertThat(list.size()).isEqualTo(2);
+        assertThat("test").isEqualTo(list.get(1).getWriterNickname());
     }
 
-    @AfterEach
-    void tearDown() {
-        memberRepository.deleteAll();
+
+
+    @Test
+    @DisplayName("삭제")
+    public void deleteBoardTest() throws Exception {
+        //when
         boardRepository.deleteAll();
+        List<Board> list = boardRepository.findAll();
+
+        //then
+        assertThat(list.size()).isEqualTo(0);
     }
 }

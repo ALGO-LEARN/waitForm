@@ -10,6 +10,7 @@ import me.ramos.WaitForm.domain.member.entity.Member;
 import me.ramos.WaitForm.domain.member.exception.MemberNotFoundException;
 import me.ramos.WaitForm.domain.member.repository.MemberRepository;
 import me.ramos.WaitForm.global.config.util.SecurityUtil;
+import me.ramos.WaitForm.global.error.exception.NoAuthorityException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,12 +41,25 @@ public class BoardService {
     }
 
     // 삭제
+    @Transactional
+    public void delete(Long boardId) {
+        final Long loginMemberId = SecurityUtil.getCurrentMemberId();
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        if (!board.getMember().getId().equals(loginMemberId)) {
+            throw new NoAuthorityException();
+        }
+        boardRepository.deleteById(boardId);
+    }
 
     // 본인이 쓴 글 목록 조회
     public List<BoardResponseDto> getMyBoardList() {
         final Long memberId = SecurityUtil.getCurrentMemberId();
 
-        return boardRepository.findAllByMemberId(memberId);
+        List<BoardResponseDto> list = boardRepository.findAllByMemberId(memberId);
+        if (list.size() == 0) {
+            throw new BoardNotFoundException();
+        }
+        return list;
     }
 
     // 단일 조회(상세)
