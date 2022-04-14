@@ -50,7 +50,6 @@
 
 .ckeditor-div h1{
     text-align: left;
-    padding: 8px;
     font-size: 2.2em;
     font-weight:bold;
     color: #060607;
@@ -63,18 +62,29 @@
 }
 
 .write-form-btn button{
-    margin: 0;
+    margin-left: 8px;
     background-color: #060607;
     color: #D7E5E7;
     font-weight: bold;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
+    padding: 8px 30px;
 }
 
-.write-form-btn button a{
-    display: inline-block;
-    padding: 8px 27px;
-    color: #D7E5E7;
-    font-weight: bold;
-    text-decoration: none;
+.title{
+    margin: 20px 0px;
+    width: 100%;
+}
+
+.title label{
+    font-weight: 700;
+}
+.title input {
+    margin-top: 10px;
+    width: 99%;
+    height: 25px;
+    padding-left: 15px;
+    border-radius: 5px;
+    border: 0.2px solid rgba(0,0,0, 0.3);
 }

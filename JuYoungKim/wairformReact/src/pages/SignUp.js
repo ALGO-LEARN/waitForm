@@ -24,7 +24,7 @@ const SignUp = (props) =>{
     const history = useHistory();
 
     const onNickNameHandler = (event) =>{
-        setNickName((nickName) =>{return event.currentTarget.value});
+        setNickName(event.currentTarget.value);
         console.log(nickName);
     }
 
