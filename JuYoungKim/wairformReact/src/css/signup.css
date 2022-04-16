@@ -74,10 +74,21 @@
 
 .signup-div button{
     padding: 10px 150px;
-    background-color: #060607;
+    /* background-color: #060607; */
     color: #D7E5E7;
     font-size: 1.1em;
     border: none;
     border-radius: 10px;
+    
+}
+
+.signup-disable{
+    background-color: gray;
+    box-shadow: 5px 2px 2px rgba(0, 0, 0, 0.5);
+    cursor: no-drop;
+}
+.signup-able{
+    background-color: #060607;
+    box-shadow: 5px 2px 2px rgba(0, 0, 0, 0.5);
     cursor: pointer;
 }

@@ -6,9 +6,13 @@ import isLogin from "../control/isLogin";
 import Board from "../components/Board";
 import getAccessToken from "../control/getAccessToken";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import '../css/post.css'
+import { useHistory } from "react-router-dom";
 
 const Boards = (props) =>{
+
+    const history = useHistory();
 
     const isloged = isLogin();
     const [posts, setPosts] = useState([]);
@@ -27,7 +31,7 @@ const Boards = (props) =>{
             console.log(response);
             console.log(response.data.data);
             setPosts(response.data.data);
-            alert(response.data.message);      
+            // alert(response.data.message);      
         })
         .catch((error)=>{
             console.log(error);
@@ -40,7 +44,10 @@ const Boards = (props) =>{
         <>
             <NavBlack isloged = {isloged}/>
             <div className="posts">
-                
+                <div className="posts-btn-div">
+                    <button onClick={(event)=>{event.preventDefault(); history.goBack();}}>이전으로</button>
+                    <button onClick={(event)=>{event.preventDefault(); history.push("/write");}}>글 작성</button>
+                </div>
                 <div className="posts-header">
                     <ul>
                         <li>작성한 글</li>

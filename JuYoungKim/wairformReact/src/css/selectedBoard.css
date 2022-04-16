@@ -1,19 +1,16 @@
 .selectedBoard-with-chat{
     display: flex;
+    justify-content:center;
     align-items: center;
     align-content: center;
     height: 800px;
-    width: 1400px;
-    margin: auto;
-    margin-top: 30px;
+    width: 100%;
+    margin-top: 50px;
 }
 
 .selectedBoard {
-    /* border: 1px solid black; */
     margin: 0 50px;
-    margin-top: 70px;
     width: 800px;
-    height: 800px;
     display: inline-block;
 }
 
@@ -42,11 +39,12 @@
 
 .selectedBoard-contents{
     padding: 30px;
+    height: 600px;
+    overflow: scroll;
 }
 
 .chat{
     display: flex;
-    align-items: center;
     height: 700px;
     width: 400px;
     border: 1px solid black;

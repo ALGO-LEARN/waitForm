@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../css/write.css"
 import AlarmModal from "./AlarmModal";
 import Footer from "../components/Footer";
@@ -9,14 +9,49 @@ import isLogin from '../control/isLogin';
 import getCKEditorValue from "../control/getCkEditorValue";
 import axios from "axios";
 import getAccessToken from "../control/getAccessToken";
-
+import { useHistory } from "react-router-dom";
 
 const Wirte = (props) =>{
+
+    const history = useHistory();
 
     const isloged = isLogin();
 
     const [title,settitle] = useState("");
     const [content,setContent] = useState("");
+
+    const[numOfChars,setNumOfChars] = useState(0);
+    const[CharsOverCheck, setCharsOverCheck] = useState(false);
+    const[CharsUnderCheck, setCharsUnderCheck] = useState(true);
+
+    const[canSubmit, setCanSubmit] =useState(false);
+
+    useEffect(()=>{
+        setNumOfChars(content.length);
+    },[content])
+
+    useEffect(()=>{
+
+        if(numOfChars>4000)
+            setCharsOverCheck(true);
+        else
+            setCharsOverCheck(false);
+
+        if(numOfChars<500)
+            setCharsUnderCheck(true);
+        else
+            setCharsUnderCheck(false);
+
+    },[numOfChars])
+
+    useState(()=>{
+
+        if(!CharsOverCheck && !CharsUnderCheck)
+            setCanSubmit(true);
+        else
+            setCanSubmit(false);
+
+    },[CharsOverCheck,CharsUnderCheck])
 
     const onTitleHandler = (event) =>{
         settitle(event.currentTarget.value);
@@ -58,9 +93,9 @@ const Wirte = (props) =>{
                 <div className="ckeditor-div">
                     <form onSubmit={onSubmit}>
                             <div className="title">
-                                <label><h3>글 제목</h3><input placeholder="제목을 입력해주세요." onChange={onTitleHandler} value={title}/></label>
+                                <label><h3>*글 제목</h3><input placeholder="제목을 입력해주세요." onChange={onTitleHandler} value={title}/></label>
                             </div>
-                            <h3>내용</h3>
+                            <h3>*양식</h3>
                             <CKEditor
                                 editor={ ClassicEditor }
                                 config = {{
@@ -85,16 +120,25 @@ const Wirte = (props) =>{
                                 console.log( 'Focus.', editor );
                                 } }
                             />
+                        <div className="byte-check">
+                                {CharsOverCheck && <p style={{color : "red"}} >! 초과된 글자 수 입니다</p>}
+                                {CharsUnderCheck && <p style={{color : "red"}}>! 양식에 필요한 글자 수가 너무 적습니다</p>}
+                        </div>
                         <div className="write-form-btn">
-                            <button>취소</button>
-                            <button type="submit">제출</button>
+                            <button
+                            disabled = { canSubmit ? false :true }
+                            className= { canSubmit ? "canSubmit" : "cantSubmit" }
+                            type="submit">제출</button>
+
+                            <button
+                            style={{backgroundColor : "#060607", cursor: "pointer"}} 
+                            onClick={ (event)=> { event.preventDefault(); history.goBack();}}>취소</button>
+
                         </div>
                     </form>
                 </div>
             </section>
-            
             <AlarmModal></AlarmModal>
-            <Footer></Footer>
         </>
     );
 }
