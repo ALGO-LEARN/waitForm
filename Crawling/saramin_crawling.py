@@ -1,6 +1,5 @@
-from bs4 import BeautifulSoup
-from urllib.request import Request, urlopen
-import pandas as pd
+
+from urllib.request import Request, urlopen, HTTPError
 import re
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -8,131 +7,77 @@ import time
 from selenium.webdriver.common.by import By
 import csv
 
-# 데이터를 받을 리스트
-link_list = []
+# Back_end 161 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=1&cat_kewd=87%2C88%2C84%2C194%2C93%2C94%2C115%2C113%2C2232&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# Software 22 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=192%2C184&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# System 9 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=319%2C185%2C186%2C189%2C320&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# Database 27 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=83%2C192%2C191%2C110&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# Network/Security 75 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=85%2C90%2C104%2C111%2C114%2C190%2C193%2C112&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# Front_end 87 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=92%2C91&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# Application 40 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=112%2C195&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# Service 108 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=89%2C81&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# Game 9 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=80&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
+# AI 58 : https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=2&cat_kewd=82%2C105%2C106%2C107%2C108%2C109%2C116&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle
 
-# 총 1~ 378까지 1페이지는 살짝 다름
-for i in range(2, 378):
-    # it전직군 크롤링
-    url = 'https://www.saramin.co.kr/zf_user/jobs/list/job-category?page=' + str(i) + '&cat_mcls=2&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle'
-    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
-    request = Request(url, headers=headers)
-    response = urlopen(request)
-    html = response.read()
-    soup = BeautifulSoup(html, 'html.parser')
+base_url = 'https://www.saramin.co.kr/zf_user/jobs/list/job-category?page='
+url_list = ['&cat_kewd=87%2C88%2C84%2C194%2C93%2C94%2C115%2C113%2C2232','&cat_kewd=192%2C184','&cat_kewd=319%2C185%2C186%2C189%2C320','&cat_kewd=83%2C192%2C191%2C110','&cat_kewd=85%2C90%2C104%2C111%2C114%2C190%2C193%2C112','&cat_kewd=92%2C91','&cat_kewd=112%2C195','&cat_kewd=89%2C81','&cat_kewd=80','&cat_kewd=82%2C105%2C106%2C107%2C108%2C109%2C116']
+url_list2 = ['&cat_kewd=83%2C192%2C191%2C110','&cat_kewd=85%2C90%2C104%2C111%2C114%2C190%2C193%2C112','&cat_kewd=92%2C91','&cat_kewd=112%2C195','&cat_kewd=89%2C81','&cat_kewd=80','&cat_kewd=82%2C105%2C106%2C107%2C108%2C109%2C116']
+tail_url = '&search_optional_item=n&search_done=y&panel_count=y&isAjaxRequest=0&page_count=50&sort=RL&type=job-category&is_param=1&isSearchResultEmpty=1&isSectionHome=0&searchParamCount=1#searchTitle'
+headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+num_list = [161,22,9,27,75,87,40,108,9,58]
+num_list2 = [27,75,87,40,108,9,58]
+data = [[]for _ in range(7)]           # url 저장 리스트
 
-    # 한페이지의 공고개수 세기
-    links = soup.select('.job_tit > a')
-    for link in links:
-        href = link.attrs['href']
-        link_list.append(href)
+# 각 해쉬태그의 url들을 찾는 크롤링코드
+driver = webdriver.Chrome("chromedriver")
+for idx, num in enumerate(num_list2):  
+    for n in range(1, num+1):
+        URL = base_url + str(n) + url_list2[idx] + tail_url
+        driver.get(url=URL)
+        driver.implicitly_wait(time_to_wait=60)
 
-print('step1 done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-print('출력된 번호의 개수:', len(link_list))
-print()
+        div = driver.find_elements(By.CLASS_NAME, "list_item")
+        for item in div:
+            tmp = item.find_element(By.TAG_NAME, "a").get_attribute('href')
+            data[idx].append(tmp)
+        time.sleep(2)
+        
+driver.close()
+print('step1 done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+print(len(data))
 
-# 한 페이지당 데이터 저장
-''' company_names = []
-titles = []
-service_introductions = []
-contents = []
-welfares = [] '''
+hashtag = ['Back_end', 'Software', 'System', 'Database', 'Network/Security', 'Front_end', 'Application', 'Service', 'Game', 'AI']
+hashtag2 = ['Database', 'Network/Security', 'Front_end', 'Application', 'Service', 'Game', 'AI']
+counting = 0
 
-# 숫자만 뽑아오기
-for number, link in enumerate(link_list):
-    link = link[48:]
-    idx = link.find('&')
-    if idx != -1:
-        idx = link.find('&')
-        link = link[:idx]
-
-    # 페이지 크롤링\
-    driver = webdriver.Chrome("chromedriver")
-    URL = 'https://www.saramin.co.kr/zf_user/jobs/relay/view?isMypage=no&rec_idx=' + link + '&recommend_ids=eJxNjrERA0EIA6txDgIExC7k%2B%2B%2FC%2BILjyXYkFhwsFc2nlJ%2F8OhxBr6fQB9manBR60CAZNuWDEqXRFzFTVRfdPNyuKqoleFV0svuW55BRFqkU3TcUnmsebWDvclY7X3cjDZuOt9cMaedrt4h3WS1l0%2FnZKv74A0PEP%2F8%3D&view_type=list&gz=1#seq=0'
-    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
-    driver.get(url=URL)
-    driver.implicitly_wait(3)
-    
-    html = driver.page_source
-    soup = BeautifulSoup(html, 'html.parser')
-
-    # 데이터 수집 후 저장
-    # 회사이름
-    company_d = []
-    title_d = []
-    service_d = []
-    welfare_d = []
-
-    data = soup.find("div", {"class", "wrap_jv_header"})
-    if data is not None:
-        company_name = data.select_one(".jv_header > a").text
-        company_d = company_name
-        print(company_name)
-
-        # 공고제목
-        title = data.select_one(".jv_header > h1").text
-        title_d = title
-
-        print(number, title)
-
-        # iframe 접근 (본문 데이터 저장)
+driver = webdriver.Chrome("chromedriver")
+for idx in range(len(data)):
+    for url in data[idx]:
         try:
-            content = driver.find_element(By.TAG_NAME, 'iframe')
-            driver.switch_to.frame("iframe_content_0")
-            main = driver.page_source
-            soup = BeautifulSoup(main, 'html.parser')
-
-            # 서비스 소개
-            data = soup.find("div", {"class", "user_content"})
-            service_introduction = data.select_one("div > div:nth-of-type(2) > div:nth-of-type(2) > div > pre").text
-
-            # 사진으로된 iframe일때
-            if not service_introduction:
-                service_d = data.select_one("div > table").get_text
+            driver.get(url=url)
+            driver.implicitly_wait(time_to_wait=60)
+            try:
+                driver.switch_to.frame("iframe_content_0")
+                contents = driver.find_element(By.CLASS_NAME, "user_content").text
                 
-            else:
-                # print(service_introduction)
-                service_d = service_introduction
+                saramin_data = {
+                'content' : contents,
+                'tag' : hashtag2[idx]
+                }  
 
-                # 모집부문 / 상세내용
-                content = data.select_one("div > div:nth-of-type(3) > div:nth-of-type(2) ")
-                content = content.select("div > dl")
-                content_d = [['#']*2 for i in range(len(content))]
-                c_list = [['#']*2 for i in range(len(content))]
-            
-                for idx,c in enumerate(content):
-                    # 모집부문
-                    recruitment = c.select_one("dt").text
-                    c_list[idx][0] = recruitment
-            
-                    #detail
-                    detail = c.get_text()
-                    c_list[idx][1] = detail
-                content_d = c_list
+                with open('./saramin_data.csv', 'a', encoding='utf-8', newline='') as csvfile:
+                    fieldnames = ['content', 'tag']
+                    csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                    csvwriter.writerow(saramin_data)
 
-                # 혜택
-                welfare = data.select_one("div > div:nth-of-type(4) > div:nth-of-type(2)").get_text
-                welfare_d = welfare
+                counting += 1   
+                print(counting,'번째 : ', hashtag[idx])     
+                time.sleep(2)
 
+            except:
+                continue
         except:
             continue
-    else:
-        continue
 
-    # 데이터 저장
-    saramin_data = {
-    'company_names' : company_d,
-    'titles' : title_d,
-    'service_introductions' : service_d,
-    'contents' : content_d,
-    'welfares' : welfare_d
-    }  
-
-    with open('./saramin_data.csv', 'a', encoding='utf-8', newline='') as csvfile:
-        fieldnames = ['company_names', 'titles', 'service_introductions', 'contents', 'welfares']
-        csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        csvwriter.writerow(saramin_data)
-    driver.close()
-
-print("step2 done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-print("데이터 저장 완료 - 크롤링 완료")
+driver.close()
+print('step2 done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+print('총데이터:', counting, '개')
