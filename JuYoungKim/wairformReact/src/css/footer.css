@@ -1,0 +1,18 @@
+/* footer 영역 */
+.footer-section{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #060607;
+    color: #D7E5E7;
+}
+
+.footer-section a{
+    text-decoration: none;
+    padding: 8px 12px;
+    color: #D7E5E7;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-left: 10px;
+}
