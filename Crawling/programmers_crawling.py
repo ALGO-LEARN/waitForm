@@ -1,7 +1,8 @@
-from urllib.error import HTTPError
-from bs4 import BeautifulSoup
+# 2022.04.06 4:38 programmers crawling done!
+# 'stack'부분과 position, requirements, preference 부분을 'content'로 묶고 'tag'(해쉬태그)부분을 추가해 총 3개의 컬럼으로 구성한 csv파일의 크롤링코드
+# 총 데이터: '3263'개
+
 from urllib.request import Request, urlopen, HTTPError
-import pandas as pd
 import re
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -9,103 +10,81 @@ import time
 from selenium.webdriver.common.by import By
 import csv
 
-# 크롤링 메인부분
-base_url = 'https://programmers.co.kr/'
-option = 'job_positions/'
-code = 2430
+# Back_end 52 : https://programmers.co.kr/job?page=1&job_category_ids=1&job_category_ids=6&job_category_ids=25&order=recent
+# Software 7 : https://programmers.co.kr/job?page=1&job_category_ids=17&order=recent
+# System 12 : https://programmers.co.kr/job?page=1&job_category_ids=18&job_category_ids=26&job_category_ids=27&job_category_ids=59&job_category_ids=13&order=recent
+# Database 11 : https://programmers.co.kr/job?page=1&job_category_ids=12&order=recent
+# Network/Security 12 : https://programmers.co.kr/job?page=1&job_category_ids=9&job_category_ids=22&order=recent
+# Front_end 30 : https://programmers.co.kr/job?page=1&job_category_ids=4&order=recent
+# Application 17 : https://programmers.co.kr/job?page=1&job_category_ids=2&job_category_ids=3&order=recent
+# Service 4 : https://programmers.co.kr/job?page=1&job_category_ids=10&order=recent
+# Game 6 : https://programmers.co.kr/job?page=1&job_category_ids=7&job_category_ids=16&job_category_ids=20&order=recent
+# AI 18 : https://programmers.co.kr/job?page=1&job_category_ids=5&job_category_ids=11&job_category_ids=12&order=recent
+
+base_url = 'https://programmers.co.kr/job?page='
+url_list = ['&job_category_ids=1&job_category_ids=6&job_category_ids=25','&job_category_ids=17','&job_category_ids=18&job_category_ids=26&job_category_ids=27&job_category_ids=59&job_category_ids=13','&job_category_ids=12','&job_category_ids=9&job_category_ids=22','&job_category_ids=4','&job_category_ids=2&job_category_ids=3','&job_category_ids=10','&job_category_ids=7&job_category_ids=16&job_category_ids=20','&job_category_ids=5&job_category_ids=11&job_category_ids=12']
+tail_url = '&order=recent'
 headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
-count_data = 0
+num_list = [52,7,12,11,12,30,17,4,6,18]
+data = [[]for _ in range(10)]           # url 저장 리스트
 
-for n in range(code, 15000, 1):
-    driver = webdriver.Chrome("chromedriver")
-    URL = base_url + option + str(n)
-    try:
+# 각 해쉬태그의 url들을 찾는 크롤링코드
+driver = webdriver.Chrome("chromedriver")
+for idx, num in enumerate(num_list):  
+    for n in range(1, num+1):
+        URL = base_url + str(n) + url_list[idx] + tail_url
         driver.get(url=URL)
-        driver.implicitly_wait(3)
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
+        driver.implicitly_wait(time_to_wait=60)
 
-        data1 = soup.find("div", {"class", "container container-position-show"})
+        div = driver.find_elements(By.CLASS_NAME, "list-position-item")
+        for item in div:
+            tmp = item.find_element(By.TAG_NAME, "a").get_attribute('href')
+            data[idx].append(tmp)
+        time.sleep(2)
+        
+driver.close()
+print('step1 done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
-        # 회사명, 공고제목
-        if data1 is not None:
-            company = data1.select_one("header > div > h2").text
-            title = data1.select_one("header > div > h4").text
+# 각 url 크롤링
+hashtag = ['Back_end', 'Software', 'System', 'Database', 'Network/Security', 'Front_end', 'Application', 'Service', 'Game', 'AI']
+counting = 0
 
-        # 나머지 데이터
-        data2 = soup.find("div", {"class", "content-body col-item col-xs-12 col-sm-12 col-md-12 col-lg-8"})
+driver = webdriver.Chrome("chromedriver")
+for idx in range(len(data)):
+    for url in data[idx]:
+        driver.get(url=url)
+        driver.implicitly_wait(time_to_wait=60)
+        try:
+            stacks = driver.find_elements(By.TAG_NAME, "code")
+            stack_data = []
+            for stack in stacks:
+                s = stack.text
+                stack_data.append(s)
 
-        if data2 is not None:
-            summarys = data2.select(".section-summary > table > tbody > tr")
-            summary = []
-            for sm in summarys:
-                sm1 = sm.select_one("td:nth-of-type(2)").text
-                sm2 = sm.select_one("td:nth-of-type(3)").text
-                summary.append([sm1,sm2])
+            position = driver.find_element(By.CLASS_NAME, "section-position")
+            requirements = driver.find_element(By.CLASS_NAME, "section-requirements")
+            preference = driver.find_element(By.CLASS_NAME, "section-preference")
 
-            stacks = data2.select(".section-stacks > table > tbody > tr > td > code")
-            stack = []
-
-            for sc in stacks:
-                stack.append(sc.text)
-
-            position = data2.select_one(".section-position")
-            if position is not None:
-                position = data2.select_one(".section-position").get_text()
-            else:
-                position = []           
-
-            requirements = data2.select_one(".section-requirements")
-            if requirements is not None:
-                requirements = data2.select_one(".section-requirements").get_text()
-            else:
-                requirements = []   
-
-            preference = data2.select_one(".section-preference")
-            if preference is not None:
-                preference = data2.select_one(".section-preference").get_text()
-            else:
-                preference = []    
-
-            culture = data2.select_one(".section-culture")
-            if culture is not None:
-                culture = data2.select_one(".section-culture").get_text()
-            else:
-                culture = []           
-
-            # 요약(section-summary)
-            # 스택(section-stack)
-            # 포지션(section-position)
-            # 자격조건(section-requirements)
-            # 우대사항(section-preference)
-            # 개발팀&환경(section-culture)
+            content = position.text + requirements.text + preference.text
 
             programmers_data = {
-            'section-company' : company,
-            'section-title' : title,
-            'section-summary' : summary,
-            'section-stack' : stack,
-            'section-position' : position,
-            'section-requirements' : requirements,
-            'section-preference' : preference,
-            'section-culture' : culture
+            'stack' : stack_data,
+            'content' : content,
+            'tag' : hashtag[idx]
             }  
 
-            with open('./programmers.csv', 'a', encoding='utf-8', newline='') as csvfile:
-                fieldnames = ['section-company', 'section-title', 'section-summary', 'section-stack', 'section-position', 'section-requirements','section-preference', 'section-culture']
+            with open('./programmers_data.csv', 'a', encoding='utf-8', newline='') as csvfile:
+                fieldnames = ['stack', 'content', 'tag']
                 csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 csvwriter.writerow(programmers_data)
-            count_data += 1   
-            print(n,'번째 : ', title)
 
-    except HTTPError as e:
-        print(e)
-    driver.close()
+            counting += 1   
+            print(counting,'번째 : ', stack_data)     
+            time.sleep(3)
 
-print('crawling programmers done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-print('총데이터:',count_data)
+        except:
+            continue
 
-
-# 원래는 section-description 부분이 있었는데 해당부분은 안적은 회사들도 있고 이후 학습할때 키워드가 중요한 부분이 아니라 다량의 데이터를 더 얻기위하여 빼었음.
-
-# 1차끊김 1706, 2차끊김 1716, 3차끊김 2430
+driver.close()
+print('step2 done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+print('총데이터:', counting, '개')
