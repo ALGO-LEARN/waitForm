@@ -29,11 +29,11 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.title,
                         board.content,
                         board.createdDate,
-                        member.id,
+                        board.member.id,
                         member.nickname
                 ))
                 .from(board)
-                .innerJoin(member)
+                .innerJoin(board.member, member)
                 .on(member.id.eq(memberId))
                 .orderBy(board.createdDate.desc())
                 .fetch();
