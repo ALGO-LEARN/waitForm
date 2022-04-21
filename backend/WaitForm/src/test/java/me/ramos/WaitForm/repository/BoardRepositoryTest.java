@@ -8,9 +8,7 @@ import me.ramos.WaitForm.domain.board.repository.BoardRepository;
 import me.ramos.WaitForm.domain.member.entity.Authority;
 import me.ramos.WaitForm.domain.member.entity.Member;
 import me.ramos.WaitForm.domain.member.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -59,19 +57,6 @@ public class BoardRepositoryTest {
     }
 
     @Test
-    @DisplayName("Board 생성 테스트")
-    public void boardUploadTest() throws Exception {
-        //when
-        Board test = boardRepository.findById(1L).orElseThrow();
-
-        //then
-        assertThat("Board test").isEqualTo(test.getTitle());
-        assertThat("test content1").isEqualTo(test.getContent());
-        assertThat("test@test.com").isEqualTo(test.getMember().getEmail());
-
-    }
-
-    @Test
     @DisplayName("Member Id로 회원이 쓴 글 목록 조회 with QueryDSL")
     public void findAllByMemberIdTest_QueryDSL() {
         //when
@@ -80,18 +65,5 @@ public class BoardRepositoryTest {
         //then
         assertThat(list.size()).isEqualTo(2);
         assertThat("test").isEqualTo(list.get(1).getWriterNickname());
-    }
-
-
-
-    @Test
-    @DisplayName("삭제")
-    public void deleteBoardTest() throws Exception {
-        //when
-        boardRepository.deleteAll();
-        List<Board> list = boardRepository.findAll();
-
-        //then
-        assertThat(list.size()).isEqualTo(0);
     }
 }
