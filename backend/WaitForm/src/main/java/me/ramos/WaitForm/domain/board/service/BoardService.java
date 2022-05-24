@@ -93,7 +93,7 @@ public class BoardService {
         return BoardLikeResponseDto.of(save, board, loginMember);
     }
 
-    // 게시글에 좋아요 눌린 목록 리스트
+    // 게시글에 좋아요 눌린 목록 조회
     public List<BoardLikeResponseDto> findLikesByBoard(Long boardId) {
         List<BoardLikeResponseDto> list = boardLikeRepository.findAllByBoardId(boardId);
         if (list.size() == 0) {
@@ -102,4 +102,14 @@ public class BoardService {
         return list;
     }
 
+    // 자신이 누른 좋아요 목록 조회
+    public List<BoardLikeResponseDto> getMyLikes() {
+        final Long memberId = SecurityUtil.getCurrentMemberId();
+        List<BoardLikeResponseDto> list = boardLikeRepository.findAllByMemberId(memberId);
+
+        if (list.size() == 0) {
+            throw new BoardLikeNotFoundException();
+        }
+        return list;
+    }
 }

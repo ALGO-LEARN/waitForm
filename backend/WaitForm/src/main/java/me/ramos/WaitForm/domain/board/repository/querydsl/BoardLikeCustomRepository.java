@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface BoardLikeCustomRepository {
     List<BoardLikeResponseDto> findAllByBoardId(Long boardId);
+    List<BoardLikeResponseDto> findAllByMemberId(Long memberId);
 
 }
