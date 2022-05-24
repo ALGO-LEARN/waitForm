@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import me.ramos.WaitForm.domain.board.dto.BoardEnrollRequestDto;
+import me.ramos.WaitForm.domain.board.dto.BoardLikeResponseDto;
 import me.ramos.WaitForm.domain.board.dto.BoardResponseDto;
 import me.ramos.WaitForm.domain.board.service.BoardService;
 import me.ramos.WaitForm.global.result.ResultCode;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static me.ramos.WaitForm.global.result.ResultCode.LIKE_BOARD_SUCCESS;
 
 @RestController
 @RequiredArgsConstructor
@@ -77,6 +80,20 @@ public class BoardController {
     public ResponseEntity<ResultResponse> findOneDetail(@PathVariable("boardId") Long boardId) {
         BoardResponseDto response = boardService.findDetailInfo(boardId);
         ResultResponse result = ResultResponse.of(ResultCode.GET_BOARD_SUCCESS, response);
+        return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
+    }
+
+    // 게시글 좋아요
+    @Operation(summary = "게시글 좋아요", description = "게시글 좋아요 API",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "좋아요 성공"),
+                    @ApiResponse(responseCode = "400", description = "이미 좋아요를 누른 회원")
+            }
+    )
+    @PostMapping("/{boardId}/like")
+    public ResponseEntity<ResultResponse> likeBoard(@PathVariable("boardId") Long boardId) {
+        BoardLikeResponseDto response = boardService.likeBoard(boardId);
+        ResultResponse result = ResultResponse.of(LIKE_BOARD_SUCCESS, response);
         return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
     }
 }

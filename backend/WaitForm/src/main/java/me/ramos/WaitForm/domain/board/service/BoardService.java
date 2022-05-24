@@ -2,19 +2,26 @@ package me.ramos.WaitForm.domain.board.service;
 
 import lombok.RequiredArgsConstructor;
 import me.ramos.WaitForm.domain.board.dto.BoardEnrollRequestDto;
+import me.ramos.WaitForm.domain.board.dto.BoardLikeResponseDto;
 import me.ramos.WaitForm.domain.board.dto.BoardResponseDto;
 import me.ramos.WaitForm.domain.board.entity.Board;
+import me.ramos.WaitForm.domain.board.entity.BoardLike;
+import me.ramos.WaitForm.domain.board.exception.BoardLikeNotFoundException;
 import me.ramos.WaitForm.domain.board.exception.BoardNotFoundException;
+import me.ramos.WaitForm.domain.board.repository.BoardLikeRepository;
 import me.ramos.WaitForm.domain.board.repository.BoardRepository;
 import me.ramos.WaitForm.domain.member.entity.Member;
 import me.ramos.WaitForm.domain.member.exception.MemberNotFoundException;
 import me.ramos.WaitForm.domain.member.repository.MemberRepository;
 import me.ramos.WaitForm.global.config.util.SecurityUtil;
+import me.ramos.WaitForm.global.error.exception.EntityAlreadyExistException;
 import me.ramos.WaitForm.global.error.exception.NoAuthorityException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static me.ramos.WaitForm.global.error.ErrorCode.BOARD_LIKE_ALREADY_EXIST;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +30,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final BoardLikeRepository boardLikeRepository;
 
     // 등록
     @Transactional
@@ -67,6 +75,31 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
         return BoardResponseDto.of(board);
+    }
+
+    // 좋아요
+    @Transactional
+    public BoardLikeResponseDto likeBoard(Long boardId) {
+        final Board board = boardRepository.findWithMemberById(boardId).orElseThrow(BoardNotFoundException::new);
+        final Long memberId = SecurityUtil.getCurrentMemberId();
+        Member loginMember = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+
+        if (boardLikeRepository.findByMemberAndBoard(loginMember, board).isPresent()) {
+            throw new EntityAlreadyExistException(BOARD_LIKE_ALREADY_EXIST);
+        }
+
+        BoardLike save = boardLikeRepository.save(new BoardLike(loginMember, board));
+
+        return BoardLikeResponseDto.of(save, board, loginMember);
+    }
+
+    // 게시글에 좋아요 눌린 목록 리스트
+    public List<BoardLikeResponseDto> findLikesByBoard(Long boardId) {
+        List<BoardLikeResponseDto> list = boardLikeRepository.findAllByBoardId(boardId);
+        if (list.size() == 0) {
+            throw new BoardLikeNotFoundException();
+        }
+        return list;
     }
 
 }

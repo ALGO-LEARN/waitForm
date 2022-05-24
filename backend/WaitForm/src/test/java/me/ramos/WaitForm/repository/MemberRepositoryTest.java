@@ -3,10 +3,7 @@ package me.ramos.WaitForm.repository;
 import me.ramos.WaitForm.domain.member.entity.Authority;
 import me.ramos.WaitForm.domain.member.entity.Member;
 import me.ramos.WaitForm.domain.member.repository.MemberRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
