@@ -12,16 +12,18 @@ public class BoardLikeResponseDto {
 
     private Long boardLikeId;
     private Long boardId;
+    private String boardTitle;
     private String nickname;
 
     public static BoardLikeResponseDto of(BoardLike boardLike, Board board, Member member) {
-        return new BoardLikeResponseDto(boardLike.getId(), board.getId(), member.getNickname());
+        return new BoardLikeResponseDto(boardLike.getId(), board.getId(), board.getTitle(), member.getNickname());
     }
 
     @QueryProjection
-    public BoardLikeResponseDto(Long boardLikeId, Long boardId, String nickname) {
+    public BoardLikeResponseDto(Long boardLikeId, Long boardId, String boardTitle, String nickname) {
         this.boardLikeId = boardLikeId;
         this.boardId = boardId;
+        this.boardTitle = boardTitle;
         this.nickname = nickname;
     }
 }

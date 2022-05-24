@@ -23,17 +23,37 @@ public class BoardLikeCustomRepositoryImpl implements BoardLikeCustomRepository 
     public List<BoardLikeResponseDto> findAllByBoardId(Long boardId) {
         QBoardLike boardLike = QBoardLike.boardLike;
         QBoard board = QBoard.board;
+
+        List<BoardLikeResponseDto> results = queryFactory
+                .select(new QBoardLikeResponseDto(
+                        boardLike.id,
+                        boardLike.board.id,
+                        boardLike.board.title,
+                        boardLike.member.nickname
+                ))
+                .from(boardLike)
+                .innerJoin(boardLike.board, board)
+                .on(boardLike.board.id.eq(boardId))
+                .fetch();
+
+        return results;
+    }
+
+    @Override
+    public List<BoardLikeResponseDto> findAllByMemberId(Long memberId) {
+        QBoardLike boardLike = QBoardLike.boardLike;
         QMember member = QMember.member;
 
         List<BoardLikeResponseDto> results = queryFactory
                 .select(new QBoardLikeResponseDto(
                         boardLike.id,
                         boardLike.board.id,
+                        boardLike.board.title,
                         boardLike.member.nickname
                 ))
                 .from(boardLike)
-                .innerJoin(boardLike.board, board)
-                .on(boardLike.board.id.eq(boardId))
+                .innerJoin(boardLike.member, member)
+                .on(boardLike.member.id.eq(memberId))
                 .fetch();
 
         return results;
