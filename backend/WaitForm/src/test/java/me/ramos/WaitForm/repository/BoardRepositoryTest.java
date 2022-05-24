@@ -3,7 +3,7 @@ package me.ramos.WaitForm.repository;
 import me.ramos.WaitForm.TestConfig;
 import me.ramos.WaitForm.domain.board.dto.BoardResponseDto;
 import me.ramos.WaitForm.domain.board.entity.Board;
-import me.ramos.WaitForm.domain.board.repository.BoardCustomRepositoryImpl;
+import me.ramos.WaitForm.domain.board.repository.querydsl.BoardCustomRepositoryImpl;
 import me.ramos.WaitForm.domain.board.repository.BoardRepository;
 import me.ramos.WaitForm.domain.member.entity.Authority;
 import me.ramos.WaitForm.domain.member.entity.Member;
@@ -65,5 +65,11 @@ public class BoardRepositoryTest {
         //then
         assertThat(list.size()).isEqualTo(2);
         assertThat("test").isEqualTo(list.get(1).getWriterNickname());
+    }
+
+    @AfterEach
+    void tearDown() {
+        boardRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 }

@@ -19,7 +19,11 @@ public enum ResultCode {
     BOARD_ENROLL_SUCCESS(200, "B001", "게시글이 등록되었습니다."),
     GET_BOARD_SUCCESS(200, "B002", "게시글 조회 성공"),
     GET_BOARD_LIST_SUCCESS(200, "B003", "게시글 목록 조회 성공"),
-    DELETE_BOARD_SUCCESS(200, "B004", "게시글 삭제 성공");
+    DELETE_BOARD_SUCCESS(200, "B004", "게시글 삭제 성공"),
+    LIKE_BOARD_SUCCESS(200, "B005", "게시글 좋아요 성공"),
+
+    // BoardLike
+    FIND_BOARD_LIKE_SUCCESS(200, "BL001", "좋아요 조회 성공");
 
     private int status;
     private final String code;

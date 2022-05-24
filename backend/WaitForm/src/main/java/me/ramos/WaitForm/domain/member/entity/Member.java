@@ -27,7 +27,6 @@ public class Member {
     @Column(name = "member_nickname", nullable = false, unique = true)
     private String nickname;
 
-
     @Column(name = "member_role")
     @Enumerated(EnumType.STRING)
     private Authority authority;
