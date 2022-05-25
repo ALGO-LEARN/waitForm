@@ -1,5 +1,5 @@
 export default function isPassword(password){
-    var passwordRegex = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+    var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     return passwordRegex.test(password)
 }

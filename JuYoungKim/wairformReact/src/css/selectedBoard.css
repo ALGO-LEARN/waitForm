@@ -1,0 +1,51 @@
+.selectedBoard-with-chat{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    align-content: center;
+    height: 800px;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.selectedBoard {
+    margin: 0 50px;
+    width: 800px;
+    display: inline-block;
+}
+
+.selectedBoard-header{
+    border-top: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.15)
+}
+
+.selectedBoard-header ul{
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    padding: 5px 0px;
+    
+}
+
+.selectedBoard-header ul li{
+    display: inline-block;
+    font-weight: 500;
+    padding: 0px 20px;
+    font-size: 1.1em;
+    
+}
+
+.selectedBoard-contents{
+    padding: 30px;
+    height: 600px;
+    overflow: scroll;
+}
+
+.chat{
+    display: flex;
+    height: 700px;
+    width: 400px;
+    border: 1px solid black;
+}

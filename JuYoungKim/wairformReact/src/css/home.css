@@ -55,12 +55,14 @@
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
+  border: 0px;
   border: 1px solid rgba(0, 0, 0, 0.7);
 }
 
 .intro-contents a{
   /* border: 1px solid #fff; */
   text-decoration: none;
+  padding: 15px 40px;
   color: black
 }
 
@@ -73,7 +75,7 @@
 .intro-scd{
   background-color: #F7F8FF;
   width: 100%;
-  height: 800px;
+  height: 1000px;
   
   display: flex;
   flex-direction: column;

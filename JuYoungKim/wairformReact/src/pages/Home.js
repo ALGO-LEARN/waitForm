@@ -12,6 +12,7 @@ const Home=(props)=>{
         console.log("isloged in Home = "+isloged);
     },[isloged]);
     return (
+        
             <div>
                 <div className="header">
                     <HomeNav isloged = {isloged}></HomeNav>
@@ -49,8 +50,6 @@ const Home=(props)=>{
                         </div>
                     </div>
                 </div>
-
-
                 <AlarmModal></AlarmModal>
         </div>
     );
