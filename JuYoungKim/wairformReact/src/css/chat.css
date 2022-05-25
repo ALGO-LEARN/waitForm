@@ -1,0 +1,121 @@
+.chat{
+    display: flex;
+    flex-direction: column;
+    height: 700px;
+    width: 400px;
+    /* border: 1px solid black; */
+}
+.chat-header{
+    align-items: center;
+    background-color: #060607;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 4px solid #ECEEFF;
+    color: white;
+    /* border: 1px solid black; */
+    box-sizing: border-box;
+    display: flex;
+    width: 98%;
+    height: 40px;
+    margin: 0 auto;
+}
+
+.chat-header p{
+    font-weight:500;
+    margin-left: 10px;
+}
+
+.chat-body{
+    background-color: #DBEFEE;
+    color: #060607;
+    /* border: 1px solid black; */
+    box-sizing: border-box;
+    height: 600px;
+    width: 98%;
+    margin: 0px auto;
+    overflow-y: scroll;
+}
+
+
+.chat-footer{
+    background-color: #DBEFEE;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    /* border-top: 4px solid #ECEEFF; */
+    /* border: 1px solid black; */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50px;
+    width: 98%;
+    margin: 0px auto;
+}
+
+.chat-input{
+    background-color: #A8BBBA;
+    border-radius: 5px;
+    border: none;
+    box-sizing: border-box;
+    height: 70%;
+    width: 75%;
+}
+
+
+.chat-button{
+    background-color: #060607;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    height: 70%;
+    width: 15%;
+}
+
+.chat-body::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background-color: #DBEFEE;
+}
+  
+.chat-body::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+    background-color: #060607;
+}
+  
+.chat-body::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #060607;
+}
+
+.chat-body::-webkit-scrollbar-button {
+    display: none;
+}
+
+
+.chat-content-me{
+    box-sizing: content-box;
+    word-break: break-all;
+    color: black;
+    width: 140px;
+    min-height: fit-content;
+    max-height: fit-content;
+    background-color:blanchedalmond;
+    border-radius: 5px;
+    margin: 10px 0px 10px 210px;
+    padding : 10px
+}
+
+.chat-content-other{
+    box-sizing: content-box;
+    word-break: break-all;
+    color: black;
+    width: 150px;
+    min-height: fit-content;
+    max-height: fit-content;
+    background-color:#AEB2CB;
+    border-radius: 5px;
+    margin: 10px 0px 10px 10px;
+    padding : 10px
+    
+}

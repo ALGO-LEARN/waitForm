@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
-import getAccessToken from "../control/getAccessToken";
 import NavBlack from "../components/NavBlack";
+import Chat from "../components/chat";
+import getAccessToken from "../control/getAccessToken";
 import isLogin from "../control/isLogin";
 import getCKEditorValue from "../control/getCkEditorValue";
 import '../css/selectedBoard.css'
@@ -52,9 +53,7 @@ const SelectedBoard = (props) =>{
                         {content &&getCKEditorValue(content) }
                     </div>
                 </div>
-                <div className="chat">
-                    <p>추후 채팅을 위한 공간</p>
-                </div>
+                <Chat></Chat>
             </div>
             
         </>
