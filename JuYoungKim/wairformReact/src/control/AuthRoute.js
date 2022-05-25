@@ -4,11 +4,6 @@ import isLogin from './isLogin';
 
 const AuthRoute = ({component : Component, ...rest }) =>{
     const isLoged = isLogin();
-    useEffect( ()=>{
-        // console.log("AuthRoute : " + isLoged);
-        // console.log("AuthRoute component : "+ Component);
-        // console.log("AuthRout props : " + rest);
-    },[]);
     return(
         <Route
             {...rest}

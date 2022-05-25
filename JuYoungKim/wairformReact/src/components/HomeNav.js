@@ -9,6 +9,7 @@ const HomeNav = (props) => {
 
     useEffect( ()=>{
         setIsloged(props.isloged);
+        console.log("********************************");
         console.log("isloged in HomeNav = "+ isloged);
     },[isloged,props.isloged])
     return (

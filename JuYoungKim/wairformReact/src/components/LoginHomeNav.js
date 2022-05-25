@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import '../css/nav.css'
-import { useEffect } from 'react';
 import logOut from '../control/logOut';
 
 const LoginHomeNav = (props) => {
@@ -18,9 +17,9 @@ const LoginHomeNav = (props) => {
             </div>
             <div className="nav-links">
                 <Link to = "/">ABOUT</Link>
-                <Link id="alarm-show" onClick={show}>ALARM</Link>
-                <Link to = "/">BOARD</Link>
-                <Link onClick={logOut}>LOGOUT</Link>
+                <Link to = "#" id="alarm-show" onClick={show}>ALARM</Link>
+                <Link to = "/boards">BOARD</Link>
+                <Link to ="/" onClick={logOut}>LOGOUT</Link>
             </div>
         </div>
         </>

@@ -1,4 +1,4 @@
-package me.ramos.WaitForm.domain.board.repository;
+package me.ramos.WaitForm.domain.board.repository.querydsl;
 
 import me.ramos.WaitForm.domain.board.dto.BoardResponseDto;
 
