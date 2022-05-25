@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/write.css"
 import AlarmModal from "./AlarmModal";
-import Footer from "../components/Footer";
+
 import NavBlack from "../components/NavBlack";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -21,7 +21,7 @@ const Wirte = (props) =>{
     const [content,setContent] = useState("");
 
     const[numOfChars,setNumOfChars] = useState(0);
-    const[CharsOverCheck, setCharsOverCheck] = useState(false);
+    const[CharsOverCheck, setCharsOverCheck] = useState(true);
     const[CharsUnderCheck, setCharsUnderCheck] = useState(true);
 
     const[canSubmit, setCanSubmit] =useState(false);
@@ -29,6 +29,10 @@ const Wirte = (props) =>{
     useEffect(()=>{
         setNumOfChars(content.length);
     },[content])
+    useEffect(()=>{
+        console.log("********************************");
+        console.log(canSubmit);
+    },[canSubmit])
 
     useEffect(()=>{
 
@@ -43,9 +47,7 @@ const Wirte = (props) =>{
             setCharsUnderCheck(false);
 
     },[numOfChars])
-
-    useState(()=>{
-
+    useEffect(()=>{
         if(!CharsOverCheck && !CharsUnderCheck)
             setCanSubmit(true);
         else
