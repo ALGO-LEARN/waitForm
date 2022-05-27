@@ -29,7 +29,7 @@ public class Board {
     private String content;
 
     @CreatedDate
-    @Column(name = "board_create_date")
+    @Column(name = "board_created_date")
     private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
