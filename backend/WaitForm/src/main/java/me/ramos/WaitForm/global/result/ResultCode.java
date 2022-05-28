@@ -23,7 +23,12 @@ public enum ResultCode {
     LIKE_BOARD_SUCCESS(200, "B005", "게시글 좋아요 성공"),
 
     // BoardLike
-    FIND_BOARD_LIKE_SUCCESS(200, "BL001", "좋아요 조회 성공");
+    FIND_BOARD_LIKE_SUCCESS(200, "BL001", "좋아요 조회 성공"),
+
+    // Chat
+    CREATE_CHAT_ROOM_SUCCESS(200, "C001", "채팅방 생성 성공"),
+    FIND_CHAT_ROOM_SUCCESS(200, "C002", "채팅방 조회 성공"),
+    FIND_ALL_MESSAGES_SUCCESS(200, "C003", "채팅방 전체 메시지 조회 성공");
 
     private int status;
     private final String code;
