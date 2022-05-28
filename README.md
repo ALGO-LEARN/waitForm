@@ -21,3 +21,9 @@ waitForm
 ├── .gitignore      # gitignore
 └── README.md       # readme
 ```
+
+## Contributors
+- frontend [@KimJooY](https://github.com/KimJooY)
+- backend [@alanhakhyeonsong](https://github.com/alanhakhyeonsong)
+- ml [@tpqls0327](https://github.com/tpqls0327) [@ponopono0322](https://github.com/ponopono0322)
+
