@@ -28,6 +28,10 @@ public enum ErrorCode {
     BOARD_LIKE_ALREADY_EXIST(400, "B002", "해당 게시물에 이미 좋아요를 누른 회원입니다."),
     BOARD_LIKE_NOT_EXIST(404, "B003", "해당 게시물에 달린 좋아요가 없습니다."),
 
+    // Chat
+    CHAT_ROOM_NOT_FOUND(404, "C001", "채팅방을 찾을 수 없습니다."),
+    JOIN_ROOM_NOT_FOUND(404, "C002", "해당 채팅방에 참여하지 않은 회원입니다."),
+
     // Auth
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid");
 
