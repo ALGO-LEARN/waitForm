@@ -3,22 +3,24 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import NavBlack from "../components/NavBlack";
-import Chat from "../components/chat";
+import Chat from "../components/Chat";
 import getAccessToken from "../control/getAccessToken";
 import isLogin from "../control/isLogin";
 import getCKEditorValue from "../control/getCkEditorValue";
 import '../css/selectedBoard.css'
+import ChatOneToOne from "../components/ChatOneToOne";
 
 const SelectedBoard = (props) =>{
     const isloged = isLogin();
     const {boardId} = useParams();
     const [title,setTitle] =useState("");
     const [content, setContent] = useState("");
-    const [date,setDate] = useState(""); 
+    const [date,setDate] = useState("");
+    const [myNickName, setMyNickName] = useState("");
+    const [myBoardOrOthersBoard, setMyBoardOrOthersBoard] = useState(props.location.state.whosBoard);
 
     useEffect(()=>{
         const token = getAccessToken();
-        console.log(boardId);
         axios
             .get("http://localhost:8080/board/"+boardId,
             {
@@ -27,10 +29,12 @@ const SelectedBoard = (props) =>{
                 }
             })
             .then((response)=>{
+                console.log("SelectedBoadrd");
                 console.log(response);
                 setTitle(response.data.data.title);
                 setContent(response.data.data.content);
                 setDate(response.data.data.createdDate);
+                setMyNickName(response.data.data.writerNickname);
             })
             .catch((error)=>{
                 console.log(error);
@@ -53,7 +57,8 @@ const SelectedBoard = (props) =>{
                         {content &&getCKEditorValue(content) }
                     </div>
                 </div>
-                <Chat></Chat>
+                {myBoardOrOthersBoard &&<Chat boardId ={boardId} myNickName={myNickName}></Chat>}
+                {!myBoardOrOthersBoard && <ChatOneToOne boardId ={boardId} myNickName={myNickName}></ChatOneToOne>}
             </div>
             
         </>

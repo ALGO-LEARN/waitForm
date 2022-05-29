@@ -4,15 +4,13 @@ import axios from 'axios';
 import getTime from '../control/getTime';
 import getAccessToken from '../control/getAccessToken';
 import LikePerson from './LikePerson';
-import SockJS from 'sockjs-client';
 import '../css/chat.css';
-import Stomp from 'stompjs';
 
-const Chat = (props) =>{
-    const myNickName = props.myNickName;
+const ChatOneToOne = (props) =>{
+
     const chatBox = document.getElementsByClassName("chat-body")[0];
-    const sockJS = new SockJS("http://localhost:8080/ws/chat");
-    const client = Stomp.over(sockJS);
+    
+
     const [message, setMessage] = useState({
         text : '',
         time : ''
@@ -22,6 +20,7 @@ const Chat = (props) =>{
     const inputBoxRef = useRef();
 
     const [text, setText] = useState("");
+
     const [chatList, setChatList] = useState([]);
     const [likePeople, setLikePeople] = useState([]);
 
@@ -32,44 +31,6 @@ const Chat = (props) =>{
         // 내거면 me 아니면 other 
         element.className = 'chat-content-other'
         chatBox.appendChild(element);
-    }
-
-    const connect = () => {
-        const token = getAccessToken();
-        client.connect({
-            headers : {
-                Authorization: 'Bearer ' + token
-            }
-        },(res)=>{
-            console.log(res);
-        },(error)=>{
-            console.log(error);
-        })
-
-    }
-
-    const createRoom = () =>{
-        const token = getAccessToken();
-        const url = "http://localhost:8080/chat/rooms"
-        axios
-        .post(url,{
-            "host":myNickName,
-            "invited" :likePeople[0].nickname
-        },
-        {
-            headers : {
-                Authorization: 'Bearer ' + token 
-            }
-        })
-        .then((response)=>{
-            console.log("채팅방 생성");
-            console.log(response);
-        })
-        .catch((error)=>{
-            console.log("채팅방생성 오류");
-            console.log(error);
-        })
-        
     }
 
     const onTextHandler = (event) =>{
@@ -115,12 +76,11 @@ const Chat = (props) =>{
                 }
             })
         .then((response)=>{
-            console.log("who like on this board");
             console.log(response);
+            console.log("like "+response.data.data);
             setLikePeople(response.data.data);
         })
         .catch((error)=>{
-            console.log("연결실패");
             console.log(error);
         })
     },[ ]);
@@ -129,18 +89,8 @@ const Chat = (props) =>{
         scrollToBottom();
     },[chatList]);
 
-    useEffect(()=>{
-        // console.log("create Room");
-        // createRoom();
-        console.log("connect try");
-        connect();
-    },[likePeople]);
-
     return(
         <>
-            <div className='chat-like-div'>
-                {likePeople && likePeople.map((people)=><LikePerson key={people} nickName={people.nickname}/>)}
-            </div>
             <div className="chat">
                 <div className="chat-header">
                     <i className="fa-solid fa-bars"></i>
@@ -164,4 +114,4 @@ const Chat = (props) =>{
     );
 }
 
-export default Chat;
+export default ChatOneToOne;
