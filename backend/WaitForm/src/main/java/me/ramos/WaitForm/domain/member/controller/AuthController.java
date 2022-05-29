@@ -34,7 +34,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "이미 가입된 회원")
     })
     @PostMapping("/signup")
-    public ResponseEntity<ResultResponse> signup(@Valid @RequestBody MemberRegisterRequestDto memberRegisterRequestDto) {
+    public ResponseEntity<ResultResponse> signup(@Valid @RequestBody MemberRegisterRequestDto memberRegisterRequestDto) throws Exception {
         MemberResponseDto memberResponseDto = authService.signup(memberRegisterRequestDto);
         ResultResponse result = ResultResponse.of(ResultCode.REGISTER_SUCCESS, memberResponseDto);
         return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));

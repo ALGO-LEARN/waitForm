@@ -13,6 +13,7 @@ import me.ramos.WaitForm.domain.board.repository.BoardRepository;
 import me.ramos.WaitForm.domain.member.entity.Member;
 import me.ramos.WaitForm.domain.member.exception.MemberNotFoundException;
 import me.ramos.WaitForm.domain.member.repository.MemberRepository;
+import me.ramos.WaitForm.global.config.firebase.FirebaseService;
 import me.ramos.WaitForm.global.config.util.SecurityUtil;
 import me.ramos.WaitForm.global.error.exception.EntityAlreadyExistException;
 import me.ramos.WaitForm.global.error.exception.NoAuthorityException;
@@ -31,10 +32,11 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final FirebaseService firebaseService;
 
     // 등록
     @Transactional
-    public BoardResponseDto upload(BoardEnrollRequestDto request) {
+    public BoardResponseDto upload(BoardEnrollRequestDto request) throws Exception {
         final Long memberId = SecurityUtil.getCurrentMemberId();
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Board board = Board.builder()
@@ -43,7 +45,8 @@ public class BoardService {
                 .member(member)
                 .build();
 
-        boardRepository.save(board);
+        Board save = boardRepository.save(board);
+        firebaseService.insertBoard(save);
 
         return BoardResponseDto.of(board, member);
     }
