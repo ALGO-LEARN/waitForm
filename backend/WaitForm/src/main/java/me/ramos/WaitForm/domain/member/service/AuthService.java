@@ -14,6 +14,7 @@ import me.ramos.WaitForm.domain.member.repository.RefreshTokenRepository;
 import me.ramos.WaitForm.global.config.jwt.TokenProvider;
 import me.ramos.WaitForm.global.config.jwt.dto.TokenDto;
 import me.ramos.WaitForm.global.config.jwt.dto.TokenRequestDto;
+import me.ramos.WaitForm.global.config.firebase.FirebaseService;
 import me.ramos.WaitForm.global.error.exception.RefreshTokenInvalidException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,9 +32,10 @@ public class AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final FirebaseService firebaseService;
 
     @Transactional
-    public MemberResponseDto signup(MemberRegisterRequestDto memberRegisterRequestDto) {
+    public MemberResponseDto signup(MemberRegisterRequestDto memberRegisterRequestDto) throws Exception {
         if (memberRepository.existsByEmail(memberRegisterRequestDto.getEmail())) {
             throw new MemberEmailAlreadyExistException();
         }
@@ -45,8 +47,10 @@ public class AuthService {
         Member member = memberRegisterRequestDto.toEntity();
         String encryptedPassword = bCryptPasswordEncoder.encode(member.getPassword());
         member.setEncryptedPassword(encryptedPassword);
+        Member save = memberRepository.save(member);
+        firebaseService.insertMember(save);
 
-        return MemberResponseDto.of(memberRepository.save(member));
+        return MemberResponseDto.of(save);
     }
 
     @Transactional

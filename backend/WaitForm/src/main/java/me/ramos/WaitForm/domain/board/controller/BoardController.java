@@ -33,7 +33,7 @@ public class BoardController {
         }
     )
     @PostMapping("/upload")
-    public ResponseEntity<ResultResponse> upload(@Valid @RequestBody BoardEnrollRequestDto requestDto) {
+    public ResponseEntity<ResultResponse> upload(@Valid @RequestBody BoardEnrollRequestDto requestDto) throws Exception {
         BoardResponseDto response = boardService.upload(requestDto);
         ResultResponse result = ResultResponse.of(ResultCode.BOARD_ENROLL_SUCCESS, response);
         return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
