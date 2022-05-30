@@ -31,11 +31,11 @@ waitForm
 
 ## Work flow
 1. Overview  
-   ![overview_image](./Workflow/service_framework.png)
+   ![overview_image](./Workflow/service_framework.jpg)
 2. Service Sequence Diagram  
-   ![service_sequence_diagram](./Workflow/working_process.png)
+   ![service_sequence_diagram](./Workflow/working_process.jpg)
 3. Service details  
-   ![service_details](./Workflow/in_framework.png)
+   ![service_details](./Workflow/in_framework.jpg)
 
 
 ## Contributors
