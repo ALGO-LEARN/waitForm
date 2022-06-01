@@ -9,8 +9,8 @@ const NavBlack = (props) =>{
 
     useEffect( ()=>{
         setIsloged(props.isloged);
-        console.log("********************************");
-        console.log("isloged in HomeNavBlack = "+ isloged);
+        // console.log("********************************");
+        // console.log("isloged in HomeNavBlack = "+ isloged);
     },[isloged,props.isloged]);
 
 

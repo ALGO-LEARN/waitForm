@@ -16,8 +16,10 @@ const SelectedBoard = (props) =>{
     const [title,setTitle] =useState("");
     const [content, setContent] = useState("");
     const [date,setDate] = useState("");
-    const [myNickName, setMyNickName] = useState("");
+    const [writerNickName, setWriterNickName] = useState("");
+    const [writerMemberId, setWriterMemberId] = useState("");
     const [myBoardOrOthersBoard, setMyBoardOrOthersBoard] = useState(props.location.state.whosBoard);
+    const [myNickName, setMyNickName] =useState(props.location.state.myNickName);
 
     useEffect(()=>{
         const token = getAccessToken();
@@ -29,12 +31,13 @@ const SelectedBoard = (props) =>{
                 }
             })
             .then((response)=>{
-                console.log("SelectedBoadrd");
+                console.log("현재 게시글 정보");
                 console.log(response);
                 setTitle(response.data.data.title);
                 setContent(response.data.data.content);
                 setDate(response.data.data.createdDate);
-                setMyNickName(response.data.data.writerNickname);
+                setWriterNickName(response.data.data.writerNickname);
+                setWriterMemberId(response.data.data.memberId);
             })
             .catch((error)=>{
                 console.log(error);
@@ -57,8 +60,8 @@ const SelectedBoard = (props) =>{
                         {content &&getCKEditorValue(content) }
                     </div>
                 </div>
-                {myBoardOrOthersBoard &&<Chat boardId ={boardId} myNickName={myNickName}></Chat>}
-                {!myBoardOrOthersBoard && <ChatOneToOne boardId ={boardId} myNickName={myNickName}></ChatOneToOne>}
+                {myBoardOrOthersBoard &&<Chat writerMemberId = {writerMemberId} boardId = {boardId} writerNickName = {writerNickName}></Chat>}
+                {!myBoardOrOthersBoard && <ChatOneToOne writerMemberId = {writerMemberId} boardId = {boardId} writerNickName = {writerNickName} myNickName ={myNickName}></ChatOneToOne>}
             </div>
             
         </>

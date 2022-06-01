@@ -20,14 +20,13 @@ const MyWritedBoard = (props)=>{
              }
            })
         .then( (response) =>{
-            console.log(response);
+            console.log("내 글 목록");
             console.log(response.data.data);
             setPosts(response.data.data);
             // alert(response.data.message);      
         })
         .catch((error)=>{
-            console.log(error);
-            alert(error);
+            console.log("내 글 목록 조회 실패 혹은 없음");
         })
 
     },[ ]);

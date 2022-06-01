@@ -10,9 +10,11 @@ import '../css/post.css'
 const MyContractBoard = (props)=>{
 
     const [posts, setPosts] = useState([]);
+    const [myNickName,setMyNickName] = useState("");
     
     useEffect(()=>{
         const token =getAccessToken();
+        console.log("MyContarctBoard props")
         console.log(props);
         axios
         .get("http://localhost:8080/like/me/list",
@@ -22,12 +24,17 @@ const MyContractBoard = (props)=>{
              }
            })
         .then( (response) =>{
+            console.log("내가 좋아요한 Board");
             console.log(response);
+            console.log("내가 좋아요한 Board data");
             console.log(response.data.data);
-            setPosts(response.data.data);     
+            setPosts(response.data.data);
+            console.log("내 닉네임")
+            console.log(response.data.data[0].nickname);
+            setMyNickName(response.data.data[0].nickname);
         })
         .catch((error)=>{
-            console.log(error);
+            console.log("내가 좋아요한 Board 불러오기 실패");
             alert(error);
         })
 
@@ -45,7 +52,7 @@ const MyContractBoard = (props)=>{
             </div>
 
             <div className="posts-contents">
-                {posts && posts.map((post)=><Board key={post} title={post.boardTitle} createdDate = {getTime()} boardId = {post.boardId} whosBoard={props.isMyContractBoard}/>)}
+                {posts && posts.map((post)=><Board key={post} title={post.boardTitle} createdDate = {getTime()} boardId = {post.boardId} whosBoard={props.isMyContractBoard} myNickName={post.nickname}/>)}
             </div>
         </div>
     </>
