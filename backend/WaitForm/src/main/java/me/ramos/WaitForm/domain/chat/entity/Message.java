@@ -41,5 +41,6 @@ public class Message {
         this.member = member;
         this.room = room;
         this.contents = contents;
+        this.createdDate = LocalDateTime.now();
     }
 }
