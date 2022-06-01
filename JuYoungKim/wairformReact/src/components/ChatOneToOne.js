@@ -17,8 +17,9 @@ const ChatOneToOne = (props) =>{
     const sockJS = new SockJS("http://localhost:8080/ws-chat/");
     const client = Stomp.over(sockJS, options);
     
-
+    
     const myNickName = props.myNickName;
+    const writerNickName =props.writerNickName;
     const [senderId, setSenderId] = useState();
     // const writerId = props.writerMemberId;
 
@@ -33,7 +34,6 @@ const ChatOneToOne = (props) =>{
     const inputBoxRef = useRef();
 
     const [content, setContent] = useState("");
-
     const [chatList, setChatList] = useState([]);
     const [roomId, setRoomId] = useState();
     const [isWebsocketConnect,setIsWebsocketConnect] = useState(false);
@@ -54,8 +54,10 @@ const ChatOneToOne = (props) =>{
         .then((response)=>{
             console.log("채팅방 목록 조회");
             console.log(response);
-            console.log(response.data.data[0].roomId);
-            setRoomId(response.data.data[0].roomId);
+            for(let i=0; i<response.data.data.length; i++){
+                if(writerNickName === response.data.data[i].members[1].nickname)
+                    setRoomId(response.data.data[i].roomId);
+            }
         })
         .catch((error)=>{
             console.log("채팅방 목록 조회 실패");
@@ -81,16 +83,7 @@ const ChatOneToOne = (props) =>{
 
 
     useEffect(()=>{
-        const chatBox = document.getElementsByClassName("chat-body")[0];
-        const addOtherMessageOnChat = (o_message) =>{
-            const element = document.createElement('p');
-            element.innerHTML = o_message;
-    
-            // 내거면 me 아니면 other 
-            element.className = 'chat-content-other'
-            chatBox.appendChild(element);
-        }
-
+        // const chatBox = document.getElementsByClassName("chat-body")[0];
         const connect = () => {
             const token = getAccessToken();
             const headers = { Authorization :'Bearer ' + token };
@@ -114,6 +107,28 @@ const ChatOneToOne = (props) =>{
         connect();
     },[ ])
 
+    const loadChat = async (roomId) =>{
+        const url = "http://localhost:8080/chat/rooms/"+roomId+"/messages"
+        await axios.get(url,{
+            headers : {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((res)=>{
+            console.log("이전 채팅 불러오기");
+            console.log(res.data.data);
+        })
+        .catch((error)=>{
+            console.log("이전 채팅 불러오기 실패");
+            console.log(error);
+        })
+    }
+
+    useEffect(()=>{
+        roomId && console.log(roomId);
+        roomId && loadChat(roomId);
+    },[roomId])
+
 
     useEffect(()=>{
         scrollToBottom();
@@ -125,6 +140,15 @@ const ChatOneToOne = (props) =>{
 
         // 내거면 me 아니면 other 
         element.className = 'chat-content-me';
+        chatBox.appendChild(element);
+    }
+
+    const addOtherMessageOnChat = (o_message) =>{
+        const element = document.createElement('p');
+        element.innerHTML = o_message;
+
+        // 내거면 me 아니면 other 
+        element.className = 'chat-content-other'
         chatBox.appendChild(element);
     }
 
@@ -167,7 +191,7 @@ const ChatOneToOne = (props) =>{
             <div className="chat">
                 <div className="chat-header">
                     <i className="fa-solid fa-bars"></i>
-                    <p>상대방 이름</p>
+                    <p>{writerNickName}</p>
                 </div>
 
                 <div className="chat-body"

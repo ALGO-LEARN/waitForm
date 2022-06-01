@@ -21,113 +21,83 @@ const Chat = (props) =>{
 
     const myNickName = props.writerNickName;
     const senderId = props.writerMemberId;
+ 
+    const chatBoxRef = useRef();
+    const inputBoxRef = useRef();
 
     const [message, setMessage] = useState({
         roomId:'',
         senderId : '',
         content : ''
-    });
-    
-    const chatBoxRef = useRef();
-    const inputBoxRef = useRef();
-    
+    });   
     const [content, setContent] = useState("");
     const [chatList, setChatList] = useState([]);
-    const [createdRoom, setCreatedRoom] = useState();
-    const [likePeople, setLikePeople] = useState();
+    const [createdRoom, setCreatedRoom] = useState([]);
     const [isWebsocketConnect,setIsWebsocketConnect] = useState(false);
     
     
-    useEffect(()=>{
-        const token = getAccessToken();
-        const url = "http://localhost:8080/like/"+props.boardId;
-        axios
-        .get(url,
+
+    const getChatRooms = async ()=>{
+        const url = "http://localhost:8080/chat/rooms"
+        await axios.get(url,
             {
                 headers : {
                     Authorization: 'Bearer ' + token
                 }
             })
-        .then((response)=>{
-            console.log("좋아요 한 사람");
-            console.log(response);
-            setLikePeople(response.data.data);
-        })
-        .catch((error)=>{
-            console.log("좋아요 한 사람 불러오기 실패");
-            console.log(error);
-        })
-    },[ ]);
-
-    
-    useEffect(()=>{   
-        const createRoom =  () =>{
-            const token = getAccessToken();
-            const url = "http://localhost:8080/chat/rooms"
-            axios
-            .post(url,{
-                "host":myNickName,
-                "invited" :likePeople[0].nickname
-            },
-            {
-                headers : {
-                    Authorization: 'Bearer ' + token 
-                }
-            })
             .then((response)=>{
-                console.log("**************************");
-                console.log("채팅방 생성 완료");
+                console.log("채팅방 가져오기");
+                console.log(response.data.data);
                 setCreatedRoom(response.data.data);
-                console.log("**************************");
-                console.log("생성된 채팅방");
-                console.log(response);
             })
             .catch((error)=>{
-                console.log("채팅방생성 오류");
+                console.log("채팅방 가져오기 실패");
                 console.log(error);
             })
-            
-        }
-
-        likePeople && console.log(likePeople);
-        likePeople && console.log("방 생성 시도");
-        likePeople && createRoom();
-
-    },[likePeople])
+    };
 
     useEffect(()=>{
+        getChatRooms();
+    },[ ])
+
+
+    useEffect(()=>{
+        const token = getAccessToken();
+        const chatBox = document.getElementsByClassName("chat-body")[0];
+        const headers = { Authorization :'Bearer ' + token };
+
+        const addOtherMessageOnChat = (o_message) =>{
+            const element = document.createElement('p');
+            element.innerHTML = o_message;
+    
+            // 내거면 me 아니면 other 
+            element.className = 'chat-content-other'
+            chatBox.appendChild(element);
+        }
 
         const connect = () => {
-            const token = getAccessToken();
-            const chatBox = document.getElementsByClassName("chat-body")[0];
-            const addOtherMessageOnChat = (o_message) =>{
-                const element = document.createElement('p');
-                element.innerHTML = o_message;
-        
-                // 내거면 me 아니면 other 
-                element.className = 'chat-content-other'
-                chatBox.appendChild(element);
-            }
-
-            const headers = { Authorization :'Bearer ' + token };
+            
             client.connect(headers, (res) =>{
                 console.log("웹소켓 연결 성공");
                 console.log(res);
                 setIsWebsocketConnect(true);
                 client.subscribe('/sub/'+myNickName,(res)=>{
-                console.log("구독 메시지");
-                console.log(JSON.parse(res.body));
-                if(JSON.parse(res.body).sender.nickname !== myNickName)
-                addOtherMessageOnChat(JSON.parse(res.body).content);
-                })
+                        console.log("구독 메시지");
+                        console.log(JSON.parse(res.body));
+                        console.log(JSON.parse(res.body).content);
+                        if(JSON.parse(res.body).sender.nickname !== myNickName)
+                            addOtherMessageOnChat(JSON.parse(res.body).content);
+                        })
                 },(error)=>{
-                console.log("웹소켓 연결 실패");
-                console.log(error);
+                    console.log("웹소켓 연결 실패");
+                    console.log(error);
             })
         };
+
+        createdRoom && console.log("채팅방 목록");
+        createdRoom && console.log(createdRoom);
         createdRoom && console.log("웹소켓 연결 시도");
         createdRoom && connect();
-
     },[createdRoom]);
 
     useEffect(()=>{
@@ -151,7 +121,7 @@ const Chat = (props) =>{
     const onSubmit = (event) =>{
         event.preventDefault();
 
-        const roomId = createdRoom.chatRoomId;
+        const roomId = createdRoom[0].roomId;
         setMessage((prev)=> ({...prev, roomId,senderId,content}));
         setChatList([...chatList, message]);
 
@@ -181,7 +151,7 @@ const Chat = (props) =>{
     return(
         <>
             <div className='chat-like-div'>
-                {likePeople && likePeople.map((people)=><LikePerson key={people} nickName={people.nickname}/>)}
+                {createdRoom && createdRoom.map((people)=><LikePerson key={people.roomId} nickName={people.inviter.nickname}/>)}
             </div>
             <div className="chat">
                 <div className="chat-header">

@@ -27,6 +27,7 @@ const MyWritedBoard = (props)=>{
         })
         .catch((error)=>{
             console.log("내 글 목록 조회 실패 혹은 없음");
+            console.log(error);
         })
 
     },[ ]);
