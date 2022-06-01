@@ -42,5 +42,6 @@ public class JoinRoom {
         this.room = room;
         this.member = member;
         this.message = message;
+        this.createdDate = LocalDateTime.now();
     }
 }
