@@ -42,20 +42,20 @@ const MyContractBoard = (props)=>{
 
     return(
         <>
-            <div className="posts">
-            <div className="posts-header">
-                <ul>
-                    <li>수락한 글</li>
-                    <li>제목</li>
-                    <li>작성일</li>
-                </ul>
-            </div>
+            {/* <div className="posts"> */}
+                <div className="posts-header">
+                    <ul>
+                        <li>수락한 글</li>
+                        <li>제목</li>
+                        <li>작성일</li>
+                    </ul>
+                </div>
 
-            <div className="posts-contents">
-                {posts && posts.map((post)=><Board key={post} title={post.boardTitle} createdDate = {getTime()} boardId = {post.boardId} whosBoard={props.isMyContractBoard} myNickName={post.nickname}/>)}
-            </div>
-        </div>
-    </>
+                <div className="posts-contents">
+                    {posts && posts.map((post)=><Board key={post} title={post.boardTitle} createdDate = {""} boardId = {post.boardId} whosBoard={props.isMyContractBoard} myNickName={post.nickname}/>)}
+                </div>
+            {/* </div> */}
+        </>
     );
 }
 

@@ -147,6 +147,16 @@ const Chat = (props) =>{
         }
     }
 
+    const hideShowList =()=>{
+        const like_div = document.getElementsByClassName('chat-like-div')[0];
+        if(like_div.style.display ==='block'){
+            like_div.style.display='none';
+        }
+        else{
+            like_div.style.display='block';
+        }
+    }
+
     
     return(
         <>
@@ -155,7 +165,7 @@ const Chat = (props) =>{
             </div>
             <div className="chat">
                 <div className="chat-header">
-                    <i className="fa-solid fa-bars"></i>
+                    <i className="fa-solid fa-bars" onClick={hideShowList}></i>
                     <p>상대방 이름</p>
                 </div>
 

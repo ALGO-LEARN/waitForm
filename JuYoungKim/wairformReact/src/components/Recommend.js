@@ -16,19 +16,24 @@ const Recommend = (props) => {
     const [invited , setInvited] = useState();
 
 
-    const options = {debug: false};
-    const sockJS = new SockJS("http://localhost:8080/ws-chat/");
-    const client = Stomp.over(sockJS, options);
+    // const options = {debug: false};
+    // const sockJS = new SockJS("http://localhost:8080/ws-chat/");
+    // const client = Stomp.over(sockJS, options);
 
-    const sendMessage = (roomId) => {
+    const sendMessage = async (roomId) => {
+        const options = {debug: false};
+        const sockJS = new SockJS("http://localhost:8080/ws-chat/");
+        const client = Stomp.over(sockJS, options);
         const token = getAccessToken();
         const headers = { Authorization :'Bearer ' + token };
         const message = { roomId : roomId, senderId: myMemberId, content : "안녕하세요"};
         console.log(myMemberId)
-        client.connect(headers, (res)=>{
+        await client.connect(headers, (res)=>{
             console.log("채팅방 연결 성공");
             client.send('/pub/messages',headers, JSON.stringify(message));
-            client.disconnect();
+            client.disconnect(()=>{
+                client.unsubscribe('sub-0');
+            });
         },
         (error)=>{
             console.log("좋아요 시 채팅방에 첫 메세지 보내기 실패");
@@ -50,6 +55,7 @@ const Recommend = (props) => {
                 }
             }
             ).then((res)=>{
+                alert("상대방의 제안에 수락하셨습니다.");
                 console.log("좋아요 성공");
                 console.log(res);
                 setLike(true);
@@ -120,7 +126,7 @@ const Recommend = (props) => {
             <tr>
                 <td><div className="modael-contents-body-writer"><p>{boardId}</p></div></td>
                 <td><div className="modal-contents-body-title">{boardTitle} 게시글로부터 제안받으셨습니다.</div></td>
-                <td><div className="modal-contens-body-date"><button onClick={onClickHandler}>좋아요</button></div></td>
+                <td><div className="modal-contents-body-date"><button onClick={onClickHandler}>좋아요</button></div></td>
             </tr>
         </>
     );

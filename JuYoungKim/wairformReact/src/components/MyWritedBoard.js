@@ -34,7 +34,7 @@ const MyWritedBoard = (props)=>{
 
     return(
         <>
-            <div className="posts">
+        {/* <div className="posts"> */}
             <div className="posts-header">
                 <ul>
                     <li>작성한 글</li>
@@ -46,7 +46,7 @@ const MyWritedBoard = (props)=>{
             <div className="posts-contents">
                 {posts && posts.map((post)=><Board key={post} title={post.title} createdDate = {post.createdDate} boardId = {post.boardId} whosBoard ={props.isMyWritedBoard}/>)}
             </div>
-        </div>
+        {/* </div> */}
     </>
     );
 }

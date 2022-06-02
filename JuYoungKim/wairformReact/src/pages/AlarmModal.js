@@ -86,11 +86,11 @@ const AlarmModal = (props)=>{
                             </table>
                         </div>
                         <div className="modal-contents-footer">
-                            <Link to = "#">1</Link>
+                            {/* <Link to = "#">1</Link>
                             <Link to = "#">2</Link>
                             <Link to = "#">3</Link>
                             <Link to = "#">4</Link>
-                            <Link to = "#">5</Link>
+                            <Link to = "#">5</Link> */}
                         </div>
                     </div>
                 </div>

@@ -44,46 +44,65 @@ const ChatOneToOne = (props) =>{
         const token = getAccessToken();
         const url = "http://localhost:8080/chat/rooms";
         const url2 = "http://localhost:8080/member/"+myNickName;
-        axios
-        .get(url,
-            {
-                headers : {
-                    Authorization: 'Bearer ' + token
+        
+        writerNickName && axios.all([
+            axios.get(url,
+                {
+                    headers : {
+                        Authorization: 'Bearer ' + token
+                    }
+                })
+            ,axios.get(url2,
+                {                
+                    headers : {
+                        Authorization: 'Bearer ' + token
                 }
+            })])
+        .then(
+            axios.spread((response, response2)=>{
+                console.log("내 Member PK 조회");
+                console.log(response2.data.data);
+                setSenderId(response2.data.data.id);
+                
+                console.log("채팅방 목록 조회");
+                console.log(response.data.data);
+                console.log(props.writerNickName);;
+                // for(let i=0; i<response.data.data.length; i++){
+                //     if(writerNickName === response.data.data[i].members[1].nickname){
+                //         console.log(response.data.data[i].roomId);
+                //         setRoomId(response.data.data[i].roomId);
+                //     }
+                // }
+                response.data.data.forEach(element => {
+                    if(element.members[1].nickname === props.writerNickName){
+                        console.log(element.roomId);
+                        setRoomId(element.roomId);
+                    }
+                });
+
             })
-        .then((response)=>{
-            console.log("채팅방 목록 조회");
-            console.log(response);
-            for(let i=0; i<response.data.data.length; i++){
-                if(writerNickName === response.data.data[i].members[1].nickname)
-                    setRoomId(response.data.data[i].roomId);
-            }
-        })
+        )
         .catch((error)=>{
             console.log("채팅방 목록 조회 실패");
-            console.log(error);
-        });
-        
-        axios.get(url2,
-            {                
-                headers : {
-                    Authorization: 'Bearer ' + token
-            }
-        })
-        .then((response) =>{
-            console.log("내 Member PK 조회");
-            console.log(response.data);
-            setSenderId(response.data.data.id);
-        })
-        .catch((error)=>{
+            console.log("혹은")
             console.log("내 Member PK 조회 실패");
             console.log(error);
-        });
-    },[ ]);
+
+        })
+    },[writerNickName]);
+
+    useEffect(()=>{
+        senderId && console.log("내 pk");
+        senderId && console.log(senderId);
+    },[senderId]);
+
+    useEffect(()=>{
+        roomId && console.log("내 방 번호" +roomId);
+        roomId && loadChat(roomId);
+    },[roomId])
 
 
     useEffect(()=>{
-        // const chatBox = document.getElementsByClassName("chat-body")[0];
         const connect = () => {
             const token = getAccessToken();
             const headers = { Authorization :'Bearer ' + token };
@@ -106,6 +125,7 @@ const ChatOneToOne = (props) =>{
         console.log("웹소켓 연결 시도");
         connect();
     },[ ])
+    
 
     const loadChat = async (roomId) =>{
         const url = "http://localhost:8080/chat/rooms/"+roomId+"/messages"
@@ -124,11 +144,6 @@ const ChatOneToOne = (props) =>{
         })
     }
 
-    useEffect(()=>{
-        roomId && console.log(roomId);
-        roomId && loadChat(roomId);
-    },[roomId])
-
 
     useEffect(()=>{
         scrollToBottom();
@@ -145,8 +160,8 @@ const ChatOneToOne = (props) =>{
 
     const addOtherMessageOnChat = (o_message) =>{
         const element = document.createElement('p');
+        const chatBox = document.getElementsByClassName("chat-body")[0];
         element.innerHTML = o_message;
-
         // 내거면 me 아니면 other 
         element.className = 'chat-content-other'
         chatBox.appendChild(element);
@@ -166,7 +181,7 @@ const ChatOneToOne = (props) =>{
         setChatList([...chatList, message]);
 
         const newMessage = {roomId, senderId, content};
-        isWebsocketConnect && client.send("/pub/messages",headers,JSON.stringify(newMessage));
+        roomId && isWebsocketConnect && client.send("/pub/messages",headers,JSON.stringify(newMessage));
         isWebsocketConnect && addMyMessageOnChat(newMessage.content);
 
         setInputTextNull();
@@ -190,7 +205,6 @@ const ChatOneToOne = (props) =>{
         <>
             <div className="chat">
                 <div className="chat-header">
-                    <i className="fa-solid fa-bars"></i>
                     <p>{writerNickName}</p>
                 </div>
 
