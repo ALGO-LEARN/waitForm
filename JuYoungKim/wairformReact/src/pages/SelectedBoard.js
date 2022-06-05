@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
 import axios from "axios";
 import NavBlack from "../components/NavBlack";
 import Chat from "../components/Chat";
+import ChatOneToOne from "../components/ChatOneToOne";
 import getAccessToken from "../control/getAccessToken";
 import isLogin from "../control/isLogin";
 import getCKEditorValue from "../control/getCkEditorValue";
 import '../css/selectedBoard.css'
-import ChatOneToOne from "../components/ChatOneToOne";
 
 const SelectedBoard = (props) =>{
     const isloged = isLogin();
@@ -60,7 +59,7 @@ const SelectedBoard = (props) =>{
                         {content &&getCKEditorValue(content) }
                     </div>
                 </div>
-                {myBoardOrOthersBoard &&<Chat writerMemberId = {writerMemberId} boardId = {boardId} writerNickName = {writerNickName}></Chat>}
+                {myBoardOrOthersBoard &&<Chat writerMemberId = {writerMemberId} boardId = {boardId} writerNickName = {writerNickName} myNickName ={myNickName}></Chat>}
                 {!myBoardOrOthersBoard && <ChatOneToOne writerMemberId = {writerMemberId} boardId = {boardId} writerNickName = {writerNickName} myNickName ={myNickName}></ChatOneToOne>}
             </div>
             

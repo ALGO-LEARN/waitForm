@@ -16,10 +16,6 @@ const Recommend = (props) => {
     const [invited , setInvited] = useState();
 
 
-    // const options = {debug: false};
-    // const sockJS = new SockJS("http://localhost:8080/ws-chat/");
-    // const client = Stomp.over(sockJS, options);
-
     const sendMessage = async (roomId) => {
         const options = {debug: false};
         const sockJS = new SockJS("http://localhost:8080/ws-chat/");

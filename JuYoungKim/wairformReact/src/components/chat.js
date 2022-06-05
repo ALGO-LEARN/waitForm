@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 import getAccessToken from '../control/getAccessToken';
 import LikePerson from './LikePerson';
-import SockJS from 'sockjs-client';
 import '../css/chat.css';
-import Stomp from 'stompjs';
 
 const Chat = (props) =>{
 
@@ -14,13 +13,14 @@ const Chat = (props) =>{
     const chatBox = document.getElementsByClassName("chat-body")[0];
 
 
-    var options = {debug: false};
-    var sockJS = new SockJS("http://localhost:8080/ws-chat/");
-    var client = Stomp.over(sockJS, options);
+    const options = {debug: false};
+    const sockJS = new SockJS("http://localhost:8080/ws-chat/");
+    const client = Stomp.over(sockJS, options);
 
 
     const myNickName = props.writerNickName;
     const senderId = props.writerMemberId;
+    const boardId =props.boardId;
  
     const chatBoxRef = useRef();
     const inputBoxRef = useRef();
@@ -33,50 +33,132 @@ const Chat = (props) =>{
     const [content, setContent] = useState("");
     const [chatList, setChatList] = useState([]);
     const [createdRoom, setCreatedRoom] = useState([]);
+    const [boardLikes,setBoardLikes] = useState([]);
     const [isWebsocketConnect,setIsWebsocketConnect] = useState(false);
-    
-    
+    const [roomIdForNinkanme, setRoomIdForNinkanme] = useState([]); 
+    const [sroomId, setRoomId] = useState();
+    const [receiver, setRiceiver] = useState();
 
-    const getChatRooms = async ()=>{
-        const url = "http://localhost:8080/chat/rooms"
-        await axios.get(url,
-            {
+    useEffect(()=>{
+        for(let i=0; i<boardLikes.length; i++){
+            let likeNickname = boardLikes[i].nickname;
+            for(let j=0; j<createdRoom.length; j++){
+                if(likeNickname === createdRoom[j].inviter.nickname){
+                    setRoomIdForNinkanme( (prev) => {
+                        return {...prev ,[likeNickname]: createdRoom[i].roomId};
+                    });
+                }
+            }
+        }
+
+        roomIdForNinkanme && console.log("넥네임 별 채팅방 번호");
+        roomIdForNinkanme && console.log(roomIdForNinkanme);
+
+    },[boardLikes, createdRoom])
+
+    useEffect(()=>{
+        if(Object.keys(roomIdForNinkanme).length !== 0){
+            console.log("채팅방 있을 경우 첫 상대방");
+            setRiceiver(Object.entries(roomIdForNinkanme)[0][0]);
+            setRoomId(Object.entries(roomIdForNinkanme)[0][1]);
+        }
+    },[roomIdForNinkanme])
+
+    useEffect(()=>{
+        const url = "http://localhost:8080/chat/rooms/"+sroomId+"/messages";
+        const getMessages = async () => {
+            await axios.get(url,{
+                headers : {
+                    Authorization: 'Bearer ' + token
+                }
+             })
+            .then((res)=>{
+                console.log("이전 채팅 불러오기");
+                console.log(res.data.data);
+                myNickName && addRecentMessages(res.data.data);
+            })
+            .catch((error)=>{
+                console.log("이전 채팅 불러오기 실패");
+                console.log(error);
+            })
+        }
+
+        const removeBeforeMessages = () => {
+            const otext = document.querySelectorAll('.chat-content-other');
+            const mtext = document.querySelectorAll('.chat-content-me');
+
+            for(const ot of otext)
+                ot.remove();
+            for(const mt of mtext)
+                mt.remove();
+        }
+
+        const addRecentMessages = (res) => {
+            for(let i=res.length-1; i>=0; i--){
+                if(res[i].sender.nickname !== myNickName)
+                    addOtherMessageOnChat(res[i].content);
+                else
+                    addMyMessageOnChat(res[i].content);
+            }
+        }
+
+        sroomId && removeBeforeMessages();
+        sroomId && getMessages();
+    },[sroomId])
+    
+    useEffect(()=>{
+        const url = "http://localhost:8080/like/"+boardId;
+        const getLikeMyBoard = async () => {
+            await axios.get(url,{
                 headers : {
                     Authorization: 'Bearer ' + token
                 }
             })
-            .then((response)=>{
-                console.log("채팅방 가져오기");
-                console.log(response.data.data);
-                setCreatedRoom(response.data.data);
+            .then((res)=>{
+                console.log("이 글의 좋아요 가져오기 성공");
+                console.log(res.data.data);
+                setBoardLikes(res.data.data);
             })
             .catch((error)=>{
-                console.log("채팅방 가져오기 실패");
+                console.log("이 글의 좋아요 가져오기 실패");
                 console.log(error);
-            })
-    };
+            });
+        };
+        getLikeMyBoard();
+    },[boardId]);
+
+
 
     useEffect(()=>{
+
+        const getChatRooms = async ()=>{
+            const url = "http://localhost:8080/chat/rooms"
+            await axios.get(url,
+                {
+                    headers : {
+                        Authorization: 'Bearer ' + token
+                    }
+                })
+                .then((response)=>{
+                    console.log("채팅방 가져오기");
+                    console.log(response.data.data);
+                    setCreatedRoom(response.data.data);
+                })
+                .catch((error)=>{
+                    console.log("채팅방 가져오기 실패");
+                    console.log(error);
+                })
+        };
+
         getChatRooms();
     },[ ])
 
 
     useEffect(()=>{
         const token = getAccessToken();
-        const chatBox = document.getElementsByClassName("chat-body")[0];
         const headers = { Authorization :'Bearer ' + token };
 
-        const addOtherMessageOnChat = (o_message) =>{
-            const element = document.createElement('p');
-            element.innerHTML = o_message;
-    
-            // 내거면 me 아니면 other 
-            element.className = 'chat-content-other'
-            chatBox.appendChild(element);
-        }
-
         const connect = () => {
-            
             client.connect(headers, (res) =>{
                 console.log("웹소켓 연결 성공");
                 console.log(res);
@@ -85,7 +167,8 @@ const Chat = (props) =>{
                         console.log("구독 메시지");
                         console.log(JSON.parse(res.body));
                         console.log(JSON.parse(res.body).content);
-                        if(JSON.parse(res.body).sender.nickname !== myNickName)
+                        console.log(sroomId);
+                        if(JSON.parse(res.body).sender.nickname !== myNickName && JSON.parse(res.body).roomId === sroomId )
                             addOtherMessageOnChat(JSON.parse(res.body).content);
                         })
                 },(error)=>{
@@ -94,16 +177,22 @@ const Chat = (props) =>{
             })
         };
 
-        createdRoom && console.log("채팅방 목록");
-        createdRoom && console.log(createdRoom);
-        createdRoom && console.log("웹소켓 연결 시도");
-        createdRoom && connect();
-    },[createdRoom]);
+        myNickName && console.log("웹소켓 연결 시도");
+        myNickName && connect();
+    },[myNickName]);
 
     useEffect(()=>{
         scrollToBottom();
     },[chatList]);
 
+    const addOtherMessageOnChat = (o_message) =>{
+        const element = document.createElement('p');
+        element.innerHTML = o_message;
+
+        // 내거면 me 아니면 other 
+        element.className = 'chat-content-other'
+        chatBox.appendChild(element);
+    }
 
     const addMyMessageOnChat = (my_message) =>{
         const element = document.createElement('p');
@@ -121,7 +210,7 @@ const Chat = (props) =>{
     const onSubmit = (event) =>{
         event.preventDefault();
 
-        const roomId = createdRoom[0].roomId;
+        const roomId = sroomId;
         setMessage((prev)=> ({...prev, roomId,senderId,content}));
         setChatList([...chatList, message]);
 
@@ -161,12 +250,12 @@ const Chat = (props) =>{
     return(
         <>
             <div className='chat-like-div'>
-                {createdRoom && createdRoom.map((people)=><LikePerson key={people.roomId} nickName={people.inviter.nickname}/>)}
+                {roomIdForNinkanme && Object.entries(roomIdForNinkanme).map((obj)=><LikePerson key={obj[1]} nickName={obj[0]} roomId={obj[1]} setRoomId ={setRoomId} setRiceiver={setRiceiver}/>)}
             </div>
             <div className="chat">
                 <div className="chat-header">
                     <i className="fa-solid fa-bars" onClick={hideShowList}></i>
-                    <p>상대방 이름</p>
+                    {receiver && <p>{receiver}</p>}
                 </div>
 
                 <div className="chat-body"
