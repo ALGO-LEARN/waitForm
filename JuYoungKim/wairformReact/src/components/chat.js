@@ -40,6 +40,51 @@ const Chat = (props) =>{
     const [receiver, setRiceiver] = useState();
 
     useEffect(()=>{
+        const url = "http://localhost:8080/like/"+boardId;
+        const getLikeMyBoard = async () => {
+            await axios.get(url,{
+                headers : {
+                    Authorization: 'Bearer ' + token
+                }
+            })
+            .then((res)=>{
+                console.log("이 글의 좋아요 가져오기 성공");
+                console.log(res.data.data);
+                setBoardLikes(res.data.data);
+            })
+            .catch((error)=>{
+                console.log("이 글의 좋아요 가져오기 실패");
+                console.log(error);
+            });
+        };
+        getLikeMyBoard();
+    },[boardId]);
+
+    useEffect(()=>{
+
+        const getChatRooms = async ()=>{
+            const url = "http://localhost:8080/chat/rooms"
+            await axios.get(url,
+                {
+                    headers : {
+                        Authorization: 'Bearer ' + token
+                    }
+                })
+                .then((response)=>{
+                    console.log("채팅방 가져오기");
+                    console.log(response.data.data);
+                    setCreatedRoom(response.data.data);
+                })
+                .catch((error)=>{
+                    console.log("채팅방 가져오기 실패");
+                    console.log(error);
+                })
+        };
+
+        getChatRooms();
+    },[ ])
+
+    useEffect(()=>{
         for(let i=0; i<boardLikes.length; i++){
             let likeNickname = boardLikes[i].nickname;
             for(let j=0; j<createdRoom.length; j++){
@@ -75,6 +120,7 @@ const Chat = (props) =>{
             .then((res)=>{
                 console.log("이전 채팅 불러오기");
                 console.log(res.data.data);
+                console.log(sroomId);
                 myNickName && addRecentMessages(res.data.data);
             })
             .catch((error)=>{
@@ -104,55 +150,8 @@ const Chat = (props) =>{
 
         sroomId && removeBeforeMessages();
         sroomId && getMessages();
-    },[sroomId])
+    },[sroomId, myNickName])
     
-    useEffect(()=>{
-        const url = "http://localhost:8080/like/"+boardId;
-        const getLikeMyBoard = async () => {
-            await axios.get(url,{
-                headers : {
-                    Authorization: 'Bearer ' + token
-                }
-            })
-            .then((res)=>{
-                console.log("이 글의 좋아요 가져오기 성공");
-                console.log(res.data.data);
-                setBoardLikes(res.data.data);
-            })
-            .catch((error)=>{
-                console.log("이 글의 좋아요 가져오기 실패");
-                console.log(error);
-            });
-        };
-        getLikeMyBoard();
-    },[boardId]);
-
-
-
-    useEffect(()=>{
-
-        const getChatRooms = async ()=>{
-            const url = "http://localhost:8080/chat/rooms"
-            await axios.get(url,
-                {
-                    headers : {
-                        Authorization: 'Bearer ' + token
-                    }
-                })
-                .then((response)=>{
-                    console.log("채팅방 가져오기");
-                    console.log(response.data.data);
-                    setCreatedRoom(response.data.data);
-                })
-                .catch((error)=>{
-                    console.log("채팅방 가져오기 실패");
-                    console.log(error);
-                })
-        };
-
-        getChatRooms();
-    },[ ])
-
 
     useEffect(()=>{
         const token = getAccessToken();
@@ -166,10 +165,10 @@ const Chat = (props) =>{
                 client.subscribe('/sub/'+myNickName,(res)=>{
                         console.log("구독 메시지");
                         console.log(JSON.parse(res.body));
-                        console.log(JSON.parse(res.body).content);
-                        console.log(sroomId);
-                        if(JSON.parse(res.body).sender.nickname !== myNickName && JSON.parse(res.body).roomId === sroomId )
-                            addOtherMessageOnChat(JSON.parse(res.body).content);
+                        // console.log("roomId = "+ sroomId);
+                        // if(JSON.parse(res.body).sender.nickname !== myNickName && JSON.parse(res.body).roomId === sroomId  )
+                            // addOtherMessageOnChat(JSON.parse(res.body).content);
+                            setRecChat(JSON.parse(res.body));
                         })
                 },(error)=>{
                     console.log("웹소켓 연결 실패");
@@ -180,6 +179,14 @@ const Chat = (props) =>{
         myNickName && console.log("웹소켓 연결 시도");
         myNickName && connect();
     },[myNickName]);
+
+    const [recChat, setRecChat] = useState();
+
+    useEffect(()=>{
+        recChat && console.log("roomId = "+ sroomId);
+        if( recChat && recChat.sender.nickname !== myNickName && recChat.roomId === sroomId)
+            addOtherMessageOnChat(recChat.content);
+    },[recChat]);
 
     useEffect(()=>{
         scrollToBottom();

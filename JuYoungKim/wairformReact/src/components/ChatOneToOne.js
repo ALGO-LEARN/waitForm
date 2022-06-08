@@ -145,9 +145,10 @@ const ChatOneToOne = (props) =>{
                 client.subscribe("/sub/"+myNickName,(res)=>{
                     console.log("구독 메시지");
                     console.log(JSON.parse(res.body));
-                    console.log(JSON.parse(res.body).content);
-                    if(JSON.parse(res.body).sender.nickname !== myNickName)
-                        addOtherMessageOnChat(JSON.parse(res.body).content);
+                    
+                    // if(JSON.parse(res.body).sender.nickname !== myNickName)
+                        // addOtherMessageOnChat(JSON.parse(res.body).content);
+                        setRecChat(JSON.parse(res.body));
                 })
                 },(error)=>{
                 console.log("웹소켓 연결 실패");
@@ -162,7 +163,14 @@ const ChatOneToOne = (props) =>{
             });
         }
     },[ ])
-    
+
+    const [recChat, setRecChat] = useState();
+
+    useEffect(()=>{
+        recChat && console.log("roomId = "+ roomId);
+        if(recChat && recChat.sender.nickname !== myNickName && recChat.roomId === roomId)
+            addOtherMessageOnChat(recChat.content);
+    },[recChat]);
 
     useEffect(()=>{
         scrollToBottom();
