@@ -6,22 +6,30 @@ import numpy as np
 
 
 class Cluster:
-    def __init__(self, member_idx, board_idx, class_arr):
+    def __init__(self, board_idx):
         self.df = None
         self.dblink = None
-        self.member_idx = member_idx
         self.board_idx = board_idx
-        self.class_arr = class_arr
         self.column = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9']
 
     def connect(self):  # DB 연결 함수
-        cred = credentials.Certificate("/data/serviceAccountKey.json")
+        cred = credentials.Certificate("./data/serviceAccountKey.json")
         firebase_admin.initialize_app(cred, {
             'projectId': "waitform-test"
         })
         self.dblink = firestore.client()
 
-    def getdata(self):    # 모든 사용자 데이터 반환 함수
+    def getboard(self):
+        board = self.dblink.collection(u'BOARD').document(u"%s" % self.board_idx)
+        board_data = board.get()
+        if board_data.exists:
+            tmp = board_data.to_dict()
+            return tmp['content'], tmp['member']['id']
+        else:
+            return None
+
+    def getmembers(self, class_arr):    # 모든 사용자 데이터 반환 함수
+        usr_df = pd.DataFrame([class_arr], columns=self.column)
         if self.dblink:
             docs = self.dblink.collection(u'MEMBER').stream()
             self.df = pd.DataFrame(columns=self.column)
@@ -30,7 +38,8 @@ class Cluster:
                 tmp = pd.DataFrame(doc.to_dict(), index=[i])
                 self.df = pd.concat([self.df, tmp])
 
-            return self.df
+            self.df = pd.concat([self.df, usr_df])
+            # return self.df
 
         else:
             return "no connection!"
@@ -68,16 +77,16 @@ class Cluster:
         model.fit(arr)
         self.df['cluster'] = model.fit_predict(arr)
 
-        num = int(df.iloc[-1]['cluster'])
+        num = self.df.iloc[-1]['cluster']
         return list(self.df[self.df['cluster'] == num].head().index), self.board_idx
 
-    def update(self):   # 사용자 데이터 갱신
-        member = self.dblink.collection(u'MEMBER').document(u"%s" % self.member_idx)
+    def update(self, member_idx, class_arr):   # 사용자 데이터 갱신
+        member = self.dblink.collection(u'MEMBER').document(u"%s" % member_idx)
         member_data = member.get()
         if member_data.exists:
             tmp = member_data.to_dict()
-            legacy_data = np.array([tmp[c] for c in colum])
-            update_data = (legacy_data + self.class_arr) / 2.0
+            legacy_data = np.array([tmp[c] for c in self.column])
+            update_data = (legacy_data + class_arr) / 2.0
             member.update({u'%s' % i: j for i, j in zip(self.column, update_data)})
 
         else:
