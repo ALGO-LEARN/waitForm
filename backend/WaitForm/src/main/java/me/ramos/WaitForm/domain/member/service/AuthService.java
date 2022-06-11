@@ -11,10 +11,10 @@ import me.ramos.WaitForm.domain.member.exception.MemberEmailAlreadyExistExceptio
 import me.ramos.WaitForm.domain.member.exception.MemberNicknameAlreadyExistException;
 import me.ramos.WaitForm.domain.member.repository.MemberRepository;
 import me.ramos.WaitForm.domain.member.repository.RefreshTokenRepository;
+import me.ramos.WaitForm.global.config.firebase.FirebaseService;
 import me.ramos.WaitForm.global.config.jwt.TokenProvider;
 import me.ramos.WaitForm.global.config.jwt.dto.TokenDto;
 import me.ramos.WaitForm.global.config.jwt.dto.TokenRequestDto;
-import me.ramos.WaitForm.global.config.firebase.FirebaseService;
 import me.ramos.WaitForm.global.error.exception.RefreshTokenInvalidException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +49,11 @@ public class AuthService {
         String encryptedPassword = bCryptPasswordEncoder.encode(member.getPassword());
         member.setEncryptedPassword(encryptedPassword);
         Member save = memberRepository.save(member);
-        firebaseService.insertMember(save);
+        if (save.getId() > 500) {
+            me.ramos.WaitForm.global.config.firebase.Member firebase = new me.ramos.WaitForm.global.config.firebase.Member();
+            firebase.setId(save.getId());
+            firebaseService.insertMember(firebase);
+        }
 
         return MemberResponseDto.of(save);
     }

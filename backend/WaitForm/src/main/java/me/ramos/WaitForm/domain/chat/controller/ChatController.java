@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 import static me.ramos.WaitForm.global.result.ResultCode.*;
@@ -33,20 +32,11 @@ public class ChatController {
             }
     )
     @PostMapping("/chat/rooms")
-    public ResponseEntity<ResultResponse> createChatRoom(@RequestBody ChatRoomCreateRequest request) {
-        List<String> nicknames = new ArrayList<>();
-        nicknames.add(request.getHost());
-        nicknames.add(request.getInvited());
+    public ResponseEntity<ResultResponse> createChatRoom(@RequestBody List<String> nicknames) {
         ChatRoomCreateResponse response = chatService.createRoom(nicknames);
 
         return ResponseEntity.ok(ResultResponse.of(CREATE_CHAT_ROOM_SUCCESS, response));
     }
-
-    // 채팅방 조회
-//    @GetMapping("/chat/rooms/{roomId}")
-//    public ResponseEntity<ResultResponse> getChatRoom(@NotNull(message = "채팅방 PK는 필수입니다.") @PathVariable Long roomId) {
-//        chatService.get
-//    }
 
     @Operation(summary = "채팅방 목록 조회", description = "채팅방 목록 조회 API",
             responses = {
