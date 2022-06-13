@@ -43,7 +43,7 @@ const ChatOneToOne = (props) =>{
         const url = "http://localhost:8080/chat/rooms";
         const url2 = "http://localhost:8080/member/"+myNickName;
         
-        writerNickName && axios.all([
+        myNickName && writerNickName && axios.all([
             axios.get(url,
                 {
                     headers : {
@@ -64,10 +64,9 @@ const ChatOneToOne = (props) =>{
                 
                 console.log("채팅방 목록 조회");
                 console.log(response.data.data);
-                console.log(props.writerNickName);;
 
                 response.data.data.forEach(element => {
-                    if(element.members[1].nickname === props.writerNickName){
+                    if( (element.members[0].nickname === props.writerNickName || element.members[1].nickname === props.writerNickName) && element.inviter.nickname === myNickName ){
                         console.log(element.roomId);
                         setRoomId(element.roomId);
                     }
@@ -80,13 +79,12 @@ const ChatOneToOne = (props) =>{
             console.log("혹은")
             console.log("내 Member PK 조회 실패");
             console.log(error);
-
         })
-    },[writerNickName]);
+    },[writerNickName, myNickName]);
 
     useEffect(()=>{
-        senderId && console.log("내 pk");
-        senderId && console.log(senderId);
+        // senderId && console.log("내 pk");
+        // senderId && console.log(senderId);
     },[senderId]);
 
     useEffect(()=>{

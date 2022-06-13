@@ -64,9 +64,33 @@ const Wirte = (props) =>{
         event.preventDefault();
         console.log(getAccessToken());
         console.log(getCKEditorValue(content));
-        const token =getAccessToken();
-        axios
-            .post("http://localhost:8080/board/upload",{
+        write_CallML();
+        // const token =getAccessToken();
+        // axios
+        //     .post("http://localhost:8080/board/upload",{
+        //         "content" : content,
+        //         "title" : title
+        //        },
+        //        {
+        //          headers: {
+        //            Authorization: 'Bearer ' + token
+        //          }
+        //        })
+        //     .then( (response) =>{
+        //         console.log(response);
+        //         alert(response.data.message);
+                
+        //     })
+        //     .catch((error)=>{
+        //         console.log(error);
+        //         alert(error);
+        //     })
+    }
+
+    const write_CallML = async () =>{
+        const token = getAccessToken();
+        try{
+            const wRes = await axios.post("http://localhost:8080/board/upload",{
                 "content" : content,
                 "title" : title
                },
@@ -75,15 +99,34 @@ const Wirte = (props) =>{
                    Authorization: 'Bearer ' + token
                  }
                })
-            .then( (response) =>{
-                console.log(response);
-                alert(response.data.message);
-                
-            })
-            .catch((error)=>{
-                console.log(error);
-                alert(error);
-            })
+               console.log("글 등록 성공");
+               const board_id = wRes.data.data.boardId;
+               const mRes = await axios.get("http://127.0.0.1:8000/ML/"+board_id);
+               console.log("클러스터링된 결과");
+               console.log(mRes);
+
+               const recc = await axios.post("http://localhost:8080/recommend",{
+                "members":[
+                    {"memberId":mRes.data.clustered_id[0]+1},
+                    {"memberId":mRes.data.clustered_id[1]+1},
+                    {"memberId":mRes.data.clustered_id[2]+1},
+                    {"memberId":mRes.data.clustered_id[3]+1},
+                    {"memberId":mRes.data.clustered_id[4]+1}
+                ],
+                "boardId":parseInt(mRes.data.board_idx)
+               },
+               {
+                headers: {
+                  Authorization: 'Bearer ' + token
+                }
+              })
+               console.log("추천 성공");
+               console.log(recc)
+
+        }catch(error){
+            console.log("ML서버 실패 혹은 글 쓰기 실패 혹은 추천하기 실패");
+            console.log(error);
+        }
     }
 
     return (

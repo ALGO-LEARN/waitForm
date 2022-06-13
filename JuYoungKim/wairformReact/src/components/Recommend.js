@@ -23,7 +23,7 @@ const Recommend = (props) => {
         const token = getAccessToken();
         const headers = { Authorization :'Bearer ' + token };
         const message = { roomId : roomId, senderId: myMemberId, content : "안녕하세요"};
-        console.log(myMemberId)
+        // console.log(myMemberId)
         await client.connect(headers, (res)=>{
             console.log("채팅방 연결 성공");
             client.send('/pub/messages',headers, JSON.stringify(message));

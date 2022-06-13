@@ -90,7 +90,7 @@ const Chat = (props) =>{
             for(let j=0; j<createdRoom.length; j++){
                 if(likeNickname === createdRoom[j].inviter.nickname){
                     setRoomIdForNinkanme( (prev) => {
-                        return {...prev ,[likeNickname]: createdRoom[i].roomId};
+                        return {...prev ,[likeNickname]: createdRoom[j].roomId};
                     });
                 }
             }
