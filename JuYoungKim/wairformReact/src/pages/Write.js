@@ -65,26 +65,6 @@ const Wirte = (props) =>{
         console.log(getAccessToken());
         console.log(getCKEditorValue(content));
         write_CallML();
-        // const token =getAccessToken();
-        // axios
-        //     .post("http://localhost:8080/board/upload",{
-        //         "content" : content,
-        //         "title" : title
-        //        },
-        //        {
-        //          headers: {
-        //            Authorization: 'Bearer ' + token
-        //          }
-        //        })
-        //     .then( (response) =>{
-        //         console.log(response);
-        //         alert(response.data.message);
-                
-        //     })
-        //     .catch((error)=>{
-        //         console.log(error);
-        //         alert(error);
-        //     })
     }
 
     const write_CallML = async () =>{
@@ -120,6 +100,9 @@ const Wirte = (props) =>{
                   Authorization: 'Bearer ' + token
                 }
               })
+              alert(parseInt(mRes.data.clustered_id[0])+1+", "+parseInt(mRes.data.clustered_id[1])+1+", "+
+              parseInt(mRes.data.clustered_id[2])+1+", "+parseInt(mRes.data.clustered_id[3])+1+", "+
+              parseInt(mRes.data.clustered_id[4])+1 +"  회원에게 제안 완료");
                console.log("추천 성공");
                console.log(recc)
 

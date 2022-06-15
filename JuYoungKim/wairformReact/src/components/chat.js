@@ -150,6 +150,7 @@ const Chat = (props) =>{
 
         sroomId && removeBeforeMessages();
         sroomId && getMessages();
+        sroomId && scrollToBottom();
     },[sroomId, myNickName])
     
 
@@ -186,6 +187,7 @@ const Chat = (props) =>{
         recChat && console.log("roomId = "+ sroomId);
         if( recChat && recChat.sender.nickname !== myNickName && recChat.roomId === sroomId)
             addOtherMessageOnChat(recChat.content);
+        scrollToBottom();
     },[recChat]);
 
     useEffect(()=>{

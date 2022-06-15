@@ -129,6 +129,7 @@ const ChatOneToOne = (props) =>{
         roomId && console.log("내 방 번호" +roomId);
         roomId && removeBeforeMessages();
         roomId && getMessages();
+        roomId && scrollToBottom();
     },[roomId])
 
 
@@ -168,6 +169,7 @@ const ChatOneToOne = (props) =>{
         recChat && console.log("roomId = "+ roomId);
         if(recChat && recChat.sender.nickname !== myNickName && recChat.roomId === roomId)
             addOtherMessageOnChat(recChat.content);
+        scrollToBottom();
     },[recChat]);
 
     useEffect(()=>{
