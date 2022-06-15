@@ -5,7 +5,6 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
 import me.ramos.WaitForm.domain.board.entity.Board;
-import me.ramos.WaitForm.domain.member.entity.Member;
 import org.springframework.stereotype.Service;
 
 @Service
