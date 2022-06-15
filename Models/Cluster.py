@@ -41,7 +41,6 @@ class Cluster:
                 self.df = pd.concat([self.df, tmp])                 # 합치기
 
             self.df = pd.concat([self.df, usr_df])                  # 특징값과 함께 데이터프레임 완성
-
         else:               # db에 데이터가 없거나 문제가 생겼다면
             return "no connection!"
 
@@ -66,6 +65,22 @@ class Cluster:
             data = self.dblink.collection(u'MEMBER')
             data.document(u"%d" % (i + 1)).set({u'%s' % a: b for a, b in zip(self.column, j)})
 
+    def creatorbycsv(self, df):
+        for i, j in enumerate(df.to_dict('records')):
+            data = self.dblink.collection(u"MEMBER")
+            data.document(u"%d" % (i + 1)).set(j)
+
+    def checker(self):
+        df = pd.read_csv("conv2.csv", encoding='utf-8')
+        cov_df = pd.DataFrame(columns=['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'category'])
+        for i in df.category.unique():
+            df2 = df[df['category'] == i].sample(n=50)
+            cov_df = pd.concat([cov_df, df2])
+        cov_df.reset_index(drop=True, inplace=True)
+        cov_df['id'] = [i for i in range(1, 501)]
+        cov_df.drop(['category'], axis=1, inplace=True)
+        self.creatorbycsv(cov_df)
+
     # FIXME: 반복문 때문에 일부 사용자 없다면 오류
     def clear(self, n=1000):    # 모든 사용자 제거 함수
         for i in range(n):
@@ -82,14 +97,19 @@ class Cluster:
         num = self.df.iloc[-1]['cluster']               # 클러스터링 된 인덱스 번호
         cdata = np.array(self.df.iloc[-1][:10])         # 입력 들어온 값의 데이터
         same_data = self.df[self.df['cluster'] == num]  # 같은 클러스터 데이터프레임
+
         result = np.array([])                           # 추천 유저 리스트
         for i in same_data.index:                       # 같은 클러스터 반복
             s = np.array(same_data.loc[i])[:10]         # 각 row 넘파이 변환
             dist = np.linalg.norm(cdata-s)              # 거리 공식
             result = np.append(result, [dist])          # 거리 추가
         max_return += 1     # 인덱스 슬라이딩 때문에 추가
-        members = np.argpartition(result, max_return)[1:max_return]
+        members = np.argpartition(result, (1, max_return))[1:max_return]
         return [int(i) for i in members]
+
+    def sortby(self, m_result, n):
+        sort_arr = [self.column[i] for i in np.argpartition(-m_result, (1, len(m_result)-1))]
+        return self.df.sort_values(by=sort_arr, axis=0, ascending=False)['id'][:n].to_numpy()
 
     def update(self, member_idx, class_arr):   # 사용자 데이터 갱신
         member = self.dblink.collection(u'MEMBER').document(u"%s" % member_idx)
@@ -102,3 +122,18 @@ class Cluster:
 
         else:
             print("Failed: member data update")
+
+    def csvdbmaker(self, model_path, data_path, csv_name="conv2.csv"):
+        from BertClassification import BertClassification
+        b_class = BertClassification(model_path)
+        b_class.loader()
+
+        df = pd.read_csv(data_path).dropna().drop_duplicates(ignore_index=True)
+        ans_arr = []
+
+        for i, j in zip(df['category'][:5], df['text'][:5]):
+            sample = b_class.evaluate([[i, j]])
+            ans_arr.append(np.append(sample, np.array([i])))
+
+        df2 = pd.DataFrame(ans_arr, columns=['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'category'])
+        df2.to_csv(csv_name, index=False, encoding='utf-8')

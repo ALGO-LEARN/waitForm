@@ -14,12 +14,15 @@ def main():
     b_class = BertClassification("./data/bert_classifi_model.pt")  # 학습된 모델 불러오기
     b_class.loader()            # 모델 준비
     sample = b_class.evaluate(sen)  # 모델 결과 뽑기
+    print("모델 학습 결과:", sample)
     merged_sample = np.append(sample, np.array([member_idx]))
-
     cus.getmembers(merged_sample)   # 클러스터링을 위한 모든 데이터 가져오기(클래스 내부적으로 저장됨)
+
     # TODO: 아래에서 API를 호출해서 보내주는 작업 필요!
-    members = cus.cluster()   # 맴버 인덱스 배열
-    print(members)
+    # members = cus.cluster()   # 클러스터링 옛날 버전
+    members = cus.sortby(sample, 5)    # 클러스터링 새 버전, 상위 n개 추출
+
+    print("클러스터링 결과:", members)
 
 
 if __name__ == "__main__":
