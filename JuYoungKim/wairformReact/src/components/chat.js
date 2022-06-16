@@ -218,7 +218,6 @@ const Chat = (props) =>{
 
     const onSubmit = (event) =>{
         event.preventDefault();
-
         const roomId = sroomId;
         setMessage((prev)=> ({...prev, roomId,senderId,content}));
         setChatList([...chatList, message]);
@@ -231,6 +230,22 @@ const Chat = (props) =>{
         setInputTextNull();
         inputBoxRef.current.focus();
     };
+
+    const onkeyPress = (event) =>{
+        if(event.key ==='Enter'){
+            const roomId = sroomId;
+        setMessage((prev)=> ({...prev, roomId,senderId,content}));
+        setChatList([...chatList, message]);
+
+        const newMessage = {roomId, senderId, content};
+
+        isWebsocketConnect && client.send("/pub/messages",headers,JSON.stringify(newMessage));
+        isWebsocketConnect && addMyMessageOnChat(newMessage.content);
+
+        setInputTextNull();
+        inputBoxRef.current.focus();
+        }
+    } 
 
     
     const setInputTextNull = () =>{
@@ -276,6 +291,7 @@ const Chat = (props) =>{
                     <input 
                     className='chat-input'
                     onChange={onTextHandler}
+                    onKeyPress={onkeyPress}
                     ref={inputBoxRef}></input>
                     <button className='chat-button' onClick={onSubmit}><i className="fa-solid fa-share"></i></button>
                 </div>

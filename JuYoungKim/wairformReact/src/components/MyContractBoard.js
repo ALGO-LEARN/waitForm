@@ -35,7 +35,7 @@ const MyContractBoard = (props)=>{
         })
         .catch((error)=>{
             console.log("내가 좋아요한 Board 불러오기 실패");
-            alert(error);
+            //alert(error);
         })
 
     },[ ]);
