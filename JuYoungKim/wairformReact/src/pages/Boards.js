@@ -48,16 +48,17 @@ const Boards = (props) =>{
 
     return(
         <>
-            <NavBlack isloged = {isloged}/>
+            
             <div className="posts">
+                <NavBlack isloged = {isloged}/>
                 <div className="post-nav-div">
                     <div className="post-null">
 
                     </div>
                     <div className="post-ul-div">
                         <ul>
-                            <li className="my-post"><Link to='#' onClick={clickMyWritedBoard}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;내 글&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Link></li>
-                            <li className="my-post"><Link to='#' onClick={clickMyContractBoard}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;내가 수락한 제안&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Link></li>
+                            <li className="my-post"><Link to='#' onClick={clickMyWritedBoard}>내 글</Link></li>
+                            <li className="my-post"><Link to='#' onClick={clickMyContractBoard}>내가 수락한 제안</Link></li>
                         </ul>
                     </div>
                     <div className="posts-btn-div">
