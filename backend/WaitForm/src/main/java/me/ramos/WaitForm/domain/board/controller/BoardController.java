@@ -33,7 +33,7 @@ public class BoardController {
         }
     )
     @PostMapping("/upload")
-    public ResponseEntity<ResultResponse> upload(@Valid @RequestBody BoardEnrollRequestDto requestDto) {
+    public ResponseEntity<ResultResponse> upload(@Valid @RequestBody BoardEnrollRequestDto requestDto) throws Exception {
         BoardResponseDto response = boardService.upload(requestDto);
         ResultResponse result = ResultResponse.of(ResultCode.BOARD_ENROLL_SUCCESS, response);
         return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
@@ -69,7 +69,7 @@ public class BoardController {
     }
 
     // 단일 조회(BoardId 필요함)
-    @Operation(summary = "게시글 등록", description = "게시글 등록 API(로그인된 회원만 가능)",
+    @Operation(summary = "단일 게시글 상세 조회", description = "단일 게시글 상세 조회 API(로그인된 회원만 가능)",
             responses = {
                     @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
                     @ApiResponse(responseCode = "401", description = "권한이 없습니다."),

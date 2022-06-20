@@ -80,15 +80,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().configurationSource(configurationSource())
                 .and()
                 .csrf().disable()
+                .headers().frameOptions().sameOrigin()
 
                 // exceptionHandling customizing
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/auth/login", "/auth/signup").permitAll()
+                .antMatchers("/", "/auth/login", "/auth/signup", "/ws-chat/**").permitAll()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .anyRequest().authenticated()
 
