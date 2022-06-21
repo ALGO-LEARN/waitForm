@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import me.ramos.WaitForm.domain.chat.dto.MessageDto;
 import me.ramos.WaitForm.domain.chat.entity.JoinRoom;
 import me.ramos.WaitForm.domain.chat.entity.Message;
-import me.ramos.WaitForm.domain.chat.entity.QJoinRoom;
-import me.ramos.WaitForm.domain.chat.entity.QMessage;
 import me.ramos.WaitForm.domain.chat.exception.JoinRoomNotFoundException;
 
 import java.util.List;
@@ -14,6 +12,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
+import static me.ramos.WaitForm.domain.chat.entity.QJoinRoom.joinRoom;
+import static me.ramos.WaitForm.domain.chat.entity.QMessage.message;
 import static me.ramos.WaitForm.domain.chat.entity.QRoom.room;
 import static me.ramos.WaitForm.domain.member.entity.QMember.member;
 
@@ -24,12 +24,10 @@ public class MessageQuerydslRepositoryImpl implements MessageQuerydslRepository 
 
     @Override
     public List<MessageDto> findAllMessageDtoByMemberIdAndRoomId(Long memberId, Long roomId) {
-        QJoinRoom joinRoom = QJoinRoom.joinRoom;
-        QMessage message = QMessage.message;
 
         final JoinRoom findJoinRoom = queryFactory
                 .selectFrom(joinRoom)
-                .where(joinRoom.member.id.eq(memberId).and(QJoinRoom.joinRoom.room.id.eq(roomId)))
+                .where(joinRoom.member.id.eq(memberId).and(joinRoom.room.id.eq(roomId)))
                 .innerJoin(joinRoom.room, room).fetchJoin()
                 .innerJoin(joinRoom.member, member).fetchJoin()
                 .fetchOne();
@@ -40,9 +38,7 @@ public class MessageQuerydslRepositoryImpl implements MessageQuerydslRepository 
 
         final List<Message> messages = queryFactory
                 .selectFrom(message)
-                .where(message.room.id.eq(findJoinRoom.getRoom().getId())
-                        .and(message.createdDate.goe(findJoinRoom.getCreatedDate()))
-                )
+                .where(message.room.id.eq(findJoinRoom.getRoom().getId()))
                 .orderBy(message.id.desc())
                 .fetch();
 

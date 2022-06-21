@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,7 +18,7 @@ public class JoinRoomJdbcRepositoryImpl implements JoinRoomJdbcRepository {
 
     @Override
     public void saveAllBatch(List<JoinRoom> joinRooms, Message message) {
-        final String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime now = LocalDateTime.now();
         final String sql =
                 "INSERT INTO join_rooms (`room_id`, `member_id`, `message_id`, `join_room_created_date`) " +
                 "VALUES(?, ?, ?, ?)";
@@ -32,7 +31,7 @@ public class JoinRoomJdbcRepositoryImpl implements JoinRoomJdbcRepository {
                         ps.setString(1, joinRooms.get(i).getRoom().getId().toString());
                         ps.setString(2, joinRooms.get(i).getMember().getId().toString());
                         ps.setString(3, message.getId().toString());
-                        ps.setString(4, now);
+                        ps.setString(4, String.valueOf(now));
                     }
 
                     @Override

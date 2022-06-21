@@ -64,7 +64,7 @@ public class ChatService {
         Room room = null;
         final Map<Long, List<RoomMember>> roomMemberMap = roomMemberRepository.findAllByMemberIn(members)
                 .stream()
-                .collect(Collectors.groupingBy(r -> r.getMember().getId()));
+                .collect(Collectors.groupingBy(r -> r.getRoom().getId()));
 
         final List<Long> roomIds = new ArrayList<>();
         roomMemberMap.forEach((rid, rms) -> {
