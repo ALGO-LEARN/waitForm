@@ -30,10 +30,9 @@ const LogIn = (props) =>{
                 "password" : password
             })
             .then(function(response){
+                console.log("로그인 성공");
                 console.log(response);
-                alert(response.data.message);
                 if(response.status === 200){
-                    alert("로그인 성공");
                     localStorage.setItem("accessToken",response.data.data.accessToken);
                     localStorage.setItem("refreshToken",response.data.data.refreshToken);
                     history.push('/');
@@ -41,6 +40,7 @@ const LogIn = (props) =>{
                 }
             })
             .catch(function(error){
+                console.log("로그인 실패");
                 console.log(error);
                 alert(error);
             })
@@ -67,10 +67,10 @@ const LogIn = (props) =>{
                 </div>
                 <div>
                     <div className="btn-div">
-                        <button className="in-btn">로그인</button>
+                        <button className="in-btn" type='submit' >로그인</button>
                     </div>
                     <div className="btn-div">
-                        <button className="in-btn"><Link to='/signup'>회원가입</Link></button>
+                        <button className="in-btn" type='button'><Link to='/signup'>회원가입</Link></button>
                     </div>
                 </div>
             </form>

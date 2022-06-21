@@ -9,7 +9,7 @@ const Home=(props)=>{
     const [isloged,setIsloged] = useState(false);
     useEffect( ()=>{
         setIsloged(isLogin());
-        console.log("isloged in Home = "+isloged);
+        // console.log("isloged in Home = "+isloged);
     },[isloged]);
     return (
         
