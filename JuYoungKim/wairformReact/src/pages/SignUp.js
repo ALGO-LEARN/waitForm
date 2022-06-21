@@ -29,8 +29,8 @@ const SignUp = (props) =>{
             setEmailError(false);
         else
             setEmailError(true);
-        console.log("*******************************");    
-        console.log(email);
+        // console.log("*******************************");    
+        // console.log(email);
     },[email]);
 
     useEffect(()=>{
@@ -41,9 +41,9 @@ const SignUp = (props) =>{
         else    
             setpassWordError(true);
 
-        console.log("*******************************");
-        console.log("password : "+password);
-        console.log("password len : "+password.length);
+        // console.log("*******************************");
+        // console.log("password : "+password);
+        // console.log("password len : "+password.length);
     },[password]);
 
     useEffect(()=>{
@@ -53,9 +53,9 @@ const SignUp = (props) =>{
         else
             setpassWordValError(true);
 
-        console.log("*****************************")
-        console.log("passWordVal : "+ passwordVal);
-        console.log("pwdValCheck : "+ pwdValCheck);
+        // console.log("*****************************")
+        // console.log("passWordVal : "+ passwordVal);
+        // console.log("pwdValCheck : "+ pwdValCheck);
     },[password,passwordVal])
 
     useEffect(()=>{
@@ -64,16 +64,16 @@ const SignUp = (props) =>{
         else
             setCanSignUp(false);
         
-        console.log("*****************************");
-        console.log("emailError : " + emailError);
-        console.log("passWordError : "+ passWordError);
-        console.log("passwordValError : " + passWordValError);
+        // console.log("*****************************");
+        // console.log("emailError : " + emailError);
+        // console.log("passWordError : "+ passWordError);
+        // console.log("passwordValError : " + passWordValError);
     },[email,password,passwordVal,passWordValError,passWordError,emailError])
     
 
     const onNickNameHandler = (event) =>{
         setNickName(event.currentTarget.value);
-        console.log(nickName);
+        // console.log(nickName);
     }
 
     const onEmailHandler = (event) =>{   
@@ -92,7 +92,7 @@ const SignUp = (props) =>{
 
     const onSubmit = (event) =>{
        event.preventDefault();
-       console.log(nickName+" "+password+" "+email);
+    //    console.log(nickName+" "+password+" "+email);
         axios
             .post("http://localhost:8080/auth/signup",{
                 "email" : email,

@@ -15,9 +15,14 @@
     /* border: 1px solid black; */
     box-sizing: border-box;
     display: flex;
-    width: 98%;
+    width: 100%;
     height: 40px;
     margin: 0 auto;
+}
+
+.chat-header i{
+    margin-left: 20px;
+    cursor: pointer;
 }
 
 .chat-header p{
@@ -31,7 +36,7 @@
     /* border: 1px solid black; */
     box-sizing: border-box;
     height: 600px;
-    width: 98%;
+    width: 100%;
     margin: 0px auto;
     overflow-y: scroll;
 }
@@ -48,7 +53,7 @@
     justify-content: space-around;
     align-items: center;
     height: 50px;
-    width: 98%;
+    width: 100%;
     margin: 0px auto;
 }
 
@@ -118,4 +123,28 @@
     margin: 10px 0px 10px 10px;
     padding : 10px
     
+}
+
+.chat-like-div {
+    background-color: #7BB6B4;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    margin-left: 50px;
+    margin-right: 0px;
+    height: 600px;
+    position: relative;
+    top: -12px;
+    text-align: center;
+    width: 70px;
+}
+
+.like-person{
+    background-color: black;
+    border-radius: 50%;
+    color: white;
+    margin: 10px 0px;
+    height: 60px;
+    width: 60px;
+    line-height: 60px;
+    text-align: center;
 }
